@@ -4,14 +4,80 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="sdd.aisle4android.MainActivity">
 
+    <!--  Include toolbar XML layout  -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+
     <TextView
+        android:id="@+id/textView"
+        android:text="Hello World!"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_height="40dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:id="@+id/lists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
+
+        />
+
+
+    <!--  Bottom button setup  -->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/newList"
+            android:text="@string/newList"
+            android:textSize="17sp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:padding="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp" />
+
+        <!--  Vertical divider line  -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#FFFFFF" />
+
+        <Button
+            android:id="@+id/anotherButton"
+            android:text="@string/pinButton"
+            android:textSize="17sp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+
+
+
 </RelativeLayout>

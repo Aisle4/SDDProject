@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Aisle4Android</string>
+    <string name="app_name">Aisle4</string>
+    <string name="newList">New List</string>
+    <string name="pinButton">Pin</string>
 </resources>
