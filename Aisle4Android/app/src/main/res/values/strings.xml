@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Aisle4</string>
-    <string name="newList">New List</string>
-    <string name="pinButton">Pin</string>
+    <string name="home_heading">Shopping Lists</string>
+    <string name="btn_new_list">New List</string>
+    <string name="btn_new_list_positive">Create</string>
+    <string name="btn_pin">Pin</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="dialog_new_list_heading">New List</string>
     <string name="settings">Settings</string>
-    <string name="createList">Create List</string>
-    <string name="cancel">Cancel</string>
 </resources>
