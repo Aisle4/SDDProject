@@ -13,10 +13,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.view.Menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HomeActivity extends AppCompatActivity implements NewListDialog.Listener {
-    private String[] arrayOfLists = {"List One","List Two","List Three","List Four","List Five","List Six","List Seven"};
-
+    private List<String> shopLists = new ArrayList<>();
 
     // PUBLIC MODIFIERS
 
@@ -32,7 +34,7 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
         return true;
     }
     @Override public void onNewListDialogConfirm(String listName) {
-
+        shopLists.add(listName);
     }
 
 
@@ -48,9 +50,9 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
 
         // List
         ListView list = (ListView)findViewById(R.id.home_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayOfLists);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, shopLists);
         list.setAdapter(arrayAdapter);
-        //lv.setTextFilterEnabled(true);
 
         // Lower Panel
         // Button btnNewList = (Button)findViewById(R.id.home_btn_new_list);
