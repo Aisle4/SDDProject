@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListActivity extends AppCompatActivity implements NewListDialog.Listener {
+public class ListActivity extends AppCompatActivity implements AddItemDialog.Listener {
     private TheApp app;
     private List<String> shopItemNames = new ArrayList<>();
     private ShopList shopList;
@@ -24,7 +24,7 @@ public class ListActivity extends AppCompatActivity implements NewListDialog.Lis
     // PUBLIC MODIFIERS
 
     public void onClickBtnAddItem(View v) {
-        DialogFragment dialog = new NewListDialog();
+        DialogFragment dialog = new AddItemDialog();
         dialog.show(getSupportFragmentManager(), "Add Item"); // TODO: should this tag be in string res?
     }
     public void onClickBtnShop(View v) {
@@ -34,8 +34,9 @@ public class ListActivity extends AppCompatActivity implements NewListDialog.Lis
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
-    @Override public void onNewListDialogConfirm(String listName) {
-//        shopItemNames.add(listName);
+    @Override public void onAddItemDialogConfirm(String itemName) {
+        shopItemNames.add(itemName);
+        shopList.addItem(new ShopItem(itemName));
     }
 
 
@@ -59,6 +60,11 @@ public class ListActivity extends AppCompatActivity implements NewListDialog.Lis
         Toolbar toolbar = (Toolbar)findViewById(R.id.list_toolbar);
         toolbar.setTitle(shopList.getName());
         setSupportActionBar(toolbar);
+
+        // Get Item Names
+        for (ShopItem item : shopList.getItems()) {
+            shopItemNames.add(item.getName());
+        }
 
         // List
         ListView list = (ListView)findViewById(R.id.list_list);

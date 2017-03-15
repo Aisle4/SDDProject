@@ -2,12 +2,15 @@
     <string name="app_name">Aisle4</string>
     <string name="home_heading">Shopping Lists</string>
     <string name="btn_new_list">New List</string>
-    <string name="btn_new_list_positive">Create</string>
     <string name="btn_pin">Pin</string>
-    <string name="btn_cancel">Cancel</string>
     <string name="btn_add_item">Add Item</string>
     <string name="btn_shop">Start Shopping!</string>
+    <string name="btn_new_list_positive">Create</string>
+    <string name="btn_add_item_positive">Add</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="dialog_new_list_heading">New List</string>
     <string name="dialog_new_list_hint">Name your new list</string>
+    <string name="dialog_add_item_heading">Add Item</string>
+    <string name="dialog_add_item_hint">Enter item name</string>
     <string name="settings">Settings</string>
 </resources>
