@@ -5,6 +5,8 @@
     <string name="btn_new_list_positive">Create</string>
     <string name="btn_pin">Pin</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_add_item">Add Item</string>
+    <string name="btn_shop">Start Shopping!</string>
     <string name="dialog_new_list_heading">New List</string>
     <string name="dialog_new_list_hint">Name your new list</string>
     <string name="settings">Settings</string>
