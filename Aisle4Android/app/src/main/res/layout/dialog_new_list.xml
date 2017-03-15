@@ -14,6 +14,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/dialog_new_list_hint" />
+        android:hint="@string/dialog_new_list_hint"
+        android:nextFocusDown="@id/dialog_new_list_input" />
 
 </LinearLayout>

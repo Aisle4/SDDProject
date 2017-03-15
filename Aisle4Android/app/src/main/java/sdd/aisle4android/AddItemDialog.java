@@ -48,12 +48,10 @@ public class AddItemDialog extends DialogFragment {
 
         builder.setPositiveButton(R.string.btn_add_item_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                String itemName = editText.getText().toString();
-                Listener listener = (Listener)getActivity();
-                listener.onAddItemDialogConfirm(itemName);
+
             }
         });
-        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.btn_add_item_negative, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
         });
@@ -66,6 +64,15 @@ public class AddItemDialog extends DialogFragment {
         if(dialog != null) {
             posBtn = (Button)dialog.getButton(Dialog.BUTTON_POSITIVE);
             posBtn.setEnabled(false);
+            posBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String itemName = editText.getText().toString();
+                    Listener listener = (Listener)getActivity();
+                    listener.onAddItemDialogConfirm(itemName);
+                    editText.setText("");
+                }
+            });
         }
     }
     private void onItemNameUpdated(String name) {

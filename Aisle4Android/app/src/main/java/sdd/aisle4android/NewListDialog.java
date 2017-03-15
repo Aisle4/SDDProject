@@ -3,6 +3,7 @@ package sdd.aisle4android;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -43,6 +44,11 @@ public class NewListDialog extends DialogFragment {
                 onListTitleUpdated(s.toString());
             }
         });
+
+//        if (editText.requestFocus()) {
+//            getActivity().getWindow().setSoftInputMode(
+//                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
