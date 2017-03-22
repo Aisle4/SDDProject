@@ -24,6 +24,8 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
     private Toolbar toolbar;
 
+    ArrayAdapter<String> arrayAdapter;
+
     private boolean isShopping = false;
     private long shopStartTimeMs;
     private Handler timerHandler;
@@ -44,6 +46,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
     public void onClickBtnAddItem(View v) {
         DialogFragment dialog = new AddItemDialog();
         dialog.show(getSupportFragmentManager(), "Add Item"); // TODO: should this tag be in string res?
+
     }
     public void onClickBtnShop(View v) {
         isShopping = !isShopping;
@@ -68,6 +71,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
     @Override public void onAddItemDialogConfirm(String itemName) {
         shopItemNames.add(itemName);
         shopList.addItem(new ShopItem(itemName));
+        arrayAdapter.notifyDataSetChanged();
     }
 
 
@@ -99,9 +103,10 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
         // List
         ListView list = (ListView)findViewById(R.id.list_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        arrayAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, shopItemNames);
         list.setAdapter(arrayAdapter);
+
 
         // Timer
         timerHandler = new Handler();
