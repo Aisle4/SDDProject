@@ -26,15 +26,11 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
     private ArrayAdapter<String> arrayAdapter;
 
-    private boolean isShopping = false;
-    private long shopStartTimeMs;
     private Handler timerHandler;
     private Runnable timerUpdater = new Runnable() {
         @Override
         public void run() {
-            long currentMs = System.currentTimeMillis();
-            long ms = currentMs - shopStartTimeMs;
-            String timeStr = secondsToString((int)(ms / 1000));
+            String timeStr = secondsToString((int)(app.getShoppingTime() / 1000));
             toolbar.setTitle(shopList.getName() + "  " + timeStr);
             timerHandler.postDelayed(this, 1000);
         }
@@ -49,17 +45,17 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
     }
     public void onClickBtnShop(View v) {
-        isShopping = !isShopping;
-        Button btn = (Button)v;
-        btn.setText(isShopping ? R.string.btn_stop_shop : R.string.btn_shop);
+        if (!app.isShopping()) app.startShopping();
+        else app.endShopping();
 
-        if (isShopping) {
-            // Start Timer
-            shopStartTimeMs = System.currentTimeMillis();
+        Button btn = (Button)v;
+        btn.setText(app.isShopping() ? R.string.btn_stop_shop : R.string.btn_shop);
+
+        if (app.isShopping()) {
+            // Update timer every second
             timerHandler.post(timerUpdater);
         }
         else {
-            // Stop Timer
             timerHandler.removeCallbacks(timerUpdater);
             toolbar.setTitle(shopList.getName());
         }
@@ -106,7 +102,6 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         arrayAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, shopItemNames);
         list.setAdapter(arrayAdapter);
-
 
         // Timer
         timerHandler = new Handler();
