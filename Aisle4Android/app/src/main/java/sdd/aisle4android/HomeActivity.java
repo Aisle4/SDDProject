@@ -50,7 +50,6 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
     @Override public void onNewListDialogConfirm(String listName) {
         shopListNames.add(listName);
         app.addShopList(new ShopList(listName));
-        onClickBtnList(shopListNames.size()-1);
     }
 
 
