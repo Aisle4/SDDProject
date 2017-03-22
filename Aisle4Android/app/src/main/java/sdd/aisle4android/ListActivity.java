@@ -24,7 +24,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
     private Toolbar toolbar;
 
-    ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> arrayAdapter;
 
     private boolean isShopping = false;
     private long shopStartTimeMs;
