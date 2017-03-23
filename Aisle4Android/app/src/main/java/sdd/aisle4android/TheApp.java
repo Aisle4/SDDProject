@@ -54,9 +54,9 @@ public class TheApp extends Application {
         shopLists.add(list);
     }
     public void removeShopList(ShopList list) {
-
+        shopLists.remove(list);
     }
     public void removeShopList(int index) {
-
+        shopLists.remove(index);
     }
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends AppCompatActivity implements NewListDialog.Listener {
+public class HomeActivity extends AppCompatActivity implements NewListDialog.Listener, EditListDialog.Listener {
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
@@ -43,6 +44,15 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
         intent.putExtra(MSG_LIST_INDEX, listIndex);
         startActivity(intent);
     }
+    public void onLongClickBtnList(int listIndex) {
+        DialogFragment editDialog = new EditListDialog();
+        Bundle info = new Bundle();
+        info.putInt("INDEX", listIndex);
+        editDialog.setArguments(info);
+        editDialog.show(getSupportFragmentManager(), "Edit List"); //TODO Same as above**/
+
+        //app.removeShopList(listIndex);
+    }
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
@@ -51,6 +61,34 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
         shopListNames.add(listName);
         app.addShopList(new ShopList(listName));
         onClickBtnList(shopListNames.size()-1);
+    }
+    public void onEditListDialogConfirm(String listName, int index) {
+        app.getShopList(index).rename(listName);
+    }
+
+    public void onEditListDialogDelete(int index) {
+        shopListNames.remove(index);
+        app.removeShopList(index);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            case R.id.list_delete:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
 
@@ -78,6 +116,12 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 onClickBtnList(position);
+            }
+        });
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                onLongClickBtnList(position);
+                return true;
             }
         });
     }
