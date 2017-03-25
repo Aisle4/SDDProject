@@ -3,12 +3,14 @@ package sdd.aisle4android;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.LauncherActivity;
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,14 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends AppCompatActivity implements NewListDialog.Listener, EditListDialog.Listener {
+public class HomeActivity extends AppCompatActivity
+        implements NewListDialog.Listener, EditListDialog.Listener {
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
-    private List<String> shopListNames = new ArrayList<>();
+    private ArrayAdapter<String> listArrayAdapter;
 
 
     // PUBLIC MODIFIERS
+
+//    @Override
+//    public void onEvent(Event e) {
+//        if (e == app.eventListsChanged) {
+//            populateList();
+//        }
+//    }
 
     public void onClickBtnNewList(View v) {
         DialogFragment dialog = new NewListDialog();
@@ -40,35 +50,33 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
 
     }
     public void onClickBtnList(int listIndex) {
-        Intent intent = new Intent(this, ListActivity.class);
-        intent.putExtra(MSG_LIST_INDEX, listIndex);
-        startActivity(intent);
+        goToListScreen(listIndex);
     }
     public void onLongClickBtnList(int listIndex) {
         DialogFragment editDialog = new EditListDialog();
         Bundle info = new Bundle();
-        info.putInt("INDEX", listIndex);
+        info.putInt("INDEX", listIndex); // TODO: can we not just pass to the constructor of EditListDialog?
         editDialog.setArguments(info);
-        editDialog.show(getSupportFragmentManager(), "Edit List"); //TODO Same as above**/
-
-        //app.removeShopList(listIndex);
+        editDialog.show(getSupportFragmentManager(), "Edit List"); // TODO: should this tag be in string res?
     }
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
-    @Override public void onNewListDialogConfirm(String listName) {
-        shopListNames.add(listName);
+    @Override
+    public void onNewListDialogConfirm(String listName) {
         app.addShopList(new ShopList(listName));
-        onClickBtnList(shopListNames.size()-1);
+        populateList();
+        goToListScreen(app.getShopLists().size()-1);
     }
     public void onEditListDialogConfirm(String listName, int index) {
         app.getShopList(index).rename(listName);
+        populateList();
     }
-
     public void onEditListDialogDelete(int index) {
-        shopListNames.remove(index);
         app.removeShopList(index);
+        populateList();
     }
 
     @Override
@@ -94,27 +102,29 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
 
     // PRIVATE / PROTECTED MODIFIERS
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         app = (TheApp)getApplicationContext();
+
+        // Events
+//        app.eventListsChanged.attach(this);
 
         // Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
 
-        // Get Shopping List Names
-        for (ShopList list : app.getShopLists()) {
-            shopListNames.add(list.getName());
-        }
-
         // List View
+        listArrayAdapter = new ArrayAdapter<String>(
+            this, android.R.layout.simple_list_item_1);
+        populateList();
+
         final ListView list = (ListView)findViewById(R.id.home_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, shopListNames);
-        list.setAdapter(arrayAdapter);
+        list.setAdapter(listArrayAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 onClickBtnList(position);
             }
         });
@@ -125,6 +135,18 @@ public class HomeActivity extends AppCompatActivity implements NewListDialog.Lis
             }
         });
     }
+    private void populateList() {
+        listArrayAdapter.clear();
+        for (ShopList list : app.getShopLists()) {
+            listArrayAdapter.add(list.getName());
+        }
+    }
+    private void goToListScreen(int listIndex) {
+        Intent intent = new Intent(this, ListActivity.class);
+        intent.putExtra(MSG_LIST_INDEX, listIndex);
+        startActivity(intent);
+    }
+
 }
 
 

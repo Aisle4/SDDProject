@@ -23,13 +23,11 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity implements AddItemDialog.Listener {
     private TheApp app;
-    private List<String> shopItemNames = new ArrayList<>();
     private ShopList shopList;
 
     private Toolbar toolbar;
     private MenuItem timerItem;
-
-    private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> listArrayAdapter;
 
     private Handler timerHandler;
     private Runnable timerUpdater = new Runnable() {
@@ -46,7 +44,6 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
     public void onClickBtnAddItem(View v) {
         DialogFragment dialog = new AddItemDialog();
         dialog.show(getSupportFragmentManager(), "Add Item"); // TODO: should this tag be in string res?
-
     }
     public void onClickBtnShop(View v) {
         if (!app.isShopping()) app.startShopping();
@@ -64,7 +61,8 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
             toolbar.setTitle(shopList.getName());
         }
     }
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.list_toolbar, menu);
 
         // Timer
@@ -73,16 +71,17 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
         return true;
     }
-    @Override public void onAddItemDialogConfirm(String itemName) {
-        shopItemNames.add(itemName);
+    @Override
+    public void onAddItemDialogConfirm(String itemName) {
         shopList.addItem(new ShopItem(itemName));
-        arrayAdapter.notifyDataSetChanged();
+        populateList();
     }
 
 
     // PRIVATE / PROTECTED MODIFIERS
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         app = (TheApp)getApplicationContext();
@@ -101,16 +100,18 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         toolbar.setTitle(shopList.getName());
         setSupportActionBar(toolbar);
 
-        // Get Item Names
-        for (ShopItem item : shopList.getItems()) {
-            shopItemNames.add(item.getName());
-        }
-
-        // List
+        // List View
+        listArrayAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1);
+        populateList();
         ListView list = (ListView)findViewById(R.id.list_list);
-        arrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, shopItemNames);
-        list.setAdapter(arrayAdapter);
+        list.setAdapter(listArrayAdapter);
+    }
+    private void populateList() {
+        listArrayAdapter.clear();
+        for (ShopItem item : shopList.getItems()) {
+            listArrayAdapter.add(item.getName());
+        }
     }
 
     private String secondsToString(int pTime) {
