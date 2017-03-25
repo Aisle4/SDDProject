@@ -43,10 +43,10 @@ public class ShopList {
         items.add(item);
     }
     public void removeItem(ShopItem item) {
-
+        items.remove(item);
     }
     public void removeItem(int index) {
-
+        items.remove(index);
     }
     public void save() {
 

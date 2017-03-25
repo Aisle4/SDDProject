@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -93,6 +95,27 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
         }
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.list_list) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(shopList.getItem(info.position).getName());
+            menu.add(Menu.NONE, 0, 0, "Delete");
+        }
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        switch (item.getItemId()) {
+            case 0: // Delete
+                shopList.removeItem(info.position);
+                populateList();
+                break;
+        }
+
+        return true;
+    }
 
 
     // PRIVATE / PROTECTED MODIFIERS
@@ -123,6 +146,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         populateList();
         ListView list = (ListView)findViewById(R.id.list_list);
         list.setAdapter(listArrayAdapter);
+        registerForContextMenu(list);
     }
     private void populateList() {
         listArrayAdapter.clear();
