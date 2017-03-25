@@ -100,7 +100,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         if (v.getId() == R.id.list_list) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
             menu.setHeaderTitle(shopList.getItem(info.position).getName());
-            menu.add(Menu.NONE, 0, 0, "Delete");
+            menu.add(Menu.NONE, 0, 0, R.string.delete_item);
         }
     }
     @Override

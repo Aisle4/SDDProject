@@ -5,7 +5,7 @@
     <item android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never"/>
-    <item android:title="@string/list_delete"
+    <item android:title="@string/delete_list"
         android:id="@+id/list_delete"
         android:icon="@android:drawable/ic_menu_delete" />
     <item android:id="@+id/list_timer"
