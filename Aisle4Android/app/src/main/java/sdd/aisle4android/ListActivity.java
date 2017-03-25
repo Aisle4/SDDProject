@@ -84,6 +84,8 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
                 return true;
 
             case R.id.list_delete:
+                app.removeShopList(shopList);
+                goToHomeScreen();
                 return true;
 
             default:
@@ -127,6 +129,10 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         for (ShopItem item : shopList.getItems()) {
             listArrayAdapter.add(item.getName());
         }
+    }
+    private void goToHomeScreen() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     private String secondsToString(int pTime) {
