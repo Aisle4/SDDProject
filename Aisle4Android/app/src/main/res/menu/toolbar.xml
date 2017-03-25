@@ -2,9 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/list_delete"
-        android:id="@+id/list_delete"
-        android:icon="@android:drawable/ic_menu_delete" />
     <item android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never"/>
