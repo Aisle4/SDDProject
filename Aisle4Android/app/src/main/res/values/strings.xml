@@ -2,7 +2,6 @@
     <string name="app_name">Aisle4</string>
     <string name="home_heading">Shopping Lists</string>
     <string name="btn_new_list">New List</string>
-    <string name="btn_edit_list">Edit List</string>
     <string name="btn_pin">Pin</string>
     <string name="btn_add_item">Add Items</string>
     <string name="btn_shop">Start Shopping!</string>
@@ -10,18 +9,18 @@
     <string name="btn_new_list_positive">Create</string>
     <string name="btn_add_item_positive">Add</string>
     <string name="btn_add_item_negative">Done</string>
-    <string name="btn_edit_list_positive">Rename</string>
-    <string name="btn_edit_list_negative">Done</string>
+    <string name="btn_rename_list_positive">Rename</string>
     <string name="btn_delete_list">Delete</string>
     <string name="btn_cancel">Cancel</string>
     <string name="dialog_new_list_heading">New List</string>
     <string name="dialog_new_list_hint">Name your new list</string>
     <string name="dialog_add_item_heading">Add Items</string>
-    <string name="dialog_add_item_hint">Enter item name</string>
+    <string name="dialog_rename_list_hint">Enter new list name</string>
     <string name="settings">Settings</string>
     <string name="delete_list">Delete List</string>
     <string name="delete_item">Delete Item</string>
-    <string name="dialog_edit_list_heading">Edit List</string>
+    <string name="rename_list">Rename List</string>
+    <string name="dialog_rename_list_heading">Rename List</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

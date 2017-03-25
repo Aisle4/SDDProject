@@ -1,32 +1,21 @@
 package sdd.aisle4android;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.LauncherActivity;
-import android.app.usage.UsageEvents;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.view.Menu;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class HomeActivity extends AppCompatActivity
-        implements NewListDialog.Listener, EditListDialog.Listener {
+        implements NewListDialog.Listener, RenameListDialog.Listener {
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
@@ -52,13 +41,7 @@ public class HomeActivity extends AppCompatActivity
     public void onClickBtnList(int listIndex) {
         goToListScreen(listIndex);
     }
-    public void onLongClickBtnList(int listIndex) {
-        DialogFragment editDialog = new EditListDialog();
-        Bundle info = new Bundle();
-        info.putInt("INDEX", listIndex); // TODO: can we not just pass to the constructor of EditListDialog?
-        editDialog.setArguments(info);
-        editDialog.show(getSupportFragmentManager(), "Edit List"); // TODO: should this tag be in string res?
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
@@ -70,12 +53,8 @@ public class HomeActivity extends AppCompatActivity
         populateList();
         goToListScreen(app.getShopLists().size()-1);
     }
-    public void onEditListDialogConfirm(String listName, int index) {
+    public void onRenameListDialogConfirm(String listName, int index) {
         app.getShopList(index).rename(listName);
-        populateList();
-    }
-    public void onEditListDialogDelete(int index) {
-        app.removeShopList(index);
         populateList();
     }
 
@@ -89,6 +68,31 @@ public class HomeActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.home_list) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(app.getShopList(info.position).getName());
+            menu.add(Menu.NONE, 0, 0, R.string.rename_list);
+            menu.add(Menu.NONE, 1, 1, R.string.delete_list);
+        }
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        switch (item.getItemId()) {
+            case 0: // Rename
+                openRenameDialog(info.position);
+                break;
+            case 1: // Delete
+                app.removeShopList(info.position);
+                populateList();
+                break;
+        }
+
+        return true;
     }
 
 
@@ -112,7 +116,7 @@ public class HomeActivity extends AppCompatActivity
             this, android.R.layout.simple_list_item_1);
         populateList();
 
-        final ListView list = (ListView)findViewById(R.id.home_list);
+        ListView list = (ListView)findViewById(R.id.home_list);
         list.setAdapter(listArrayAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -120,12 +124,13 @@ public class HomeActivity extends AppCompatActivity
                 onClickBtnList(position);
             }
         });
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
-            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                onLongClickBtnList(position);
-                return true;
-            }
-        });
+//        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+//            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                onLongClickBtnList(position);
+//                return true;
+//            }
+//        });
+        registerForContextMenu(list);
     }
     private void populateList() {
         listArrayAdapter.clear();
@@ -137,6 +142,13 @@ public class HomeActivity extends AppCompatActivity
         Intent intent = new Intent(this, ListActivity.class);
         intent.putExtra(MSG_LIST_INDEX, listIndex);
         startActivity(intent);
+    }
+    private void openRenameDialog(int listIndex) {
+        RenameListDialog dialog = new RenameListDialog();
+        Bundle info = new Bundle();
+        info.putInt("INDEX", listIndex); // TODO: can we not just pass to the constructor of RenameListDialog?
+        dialog.setArguments(info);
+        dialog.show(getSupportFragmentManager(), "Rename List"); // TODO: should this tag be in string res?
     }
 
 }
