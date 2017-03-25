@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -17,13 +15,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class ListActivity extends AppCompatActivity implements AddItemDialog.Listener {
+public class ListActivity extends AppCompatActivity
+        implements AddItemDialog.Listener, RenameListDialog.Listener {
     private TheApp app;
     private ShopList shopList;
 
@@ -68,7 +63,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
         getMenuInflater().inflate(R.menu.list_toolbar, menu);
 
         // Timer
-        timerItem = menu.findItem(R.id.list_timer);
+        timerItem = menu.findItem(R.id.list_toolbar_timer);
         timerHandler = new Handler();
 
         return true;
@@ -85,14 +80,17 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
             case R.id.action_settings:
                 return true;
 
-            case R.id.list_delete:
+            case R.id.list_toolbar_rename:
+                openRenameDialog();
+                return true;
+
+            case R.id.list_toolbar_delete:
                 app.removeShopList(shopList);
                 goToHomeScreen();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
     @Override
@@ -116,7 +114,11 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
         return true;
     }
-
+    @Override
+    public void onRenameListDialogConfirm(String listName, int index) {
+        shopList.rename(listName);
+        udpateToolbarTitle();
+    }
 
     // PRIVATE / PROTECTED MODIFIERS
 
@@ -137,7 +139,7 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
 
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);
-        toolbar.setTitle(shopList.getName());
+        udpateToolbarTitle();
         setSupportActionBar(toolbar);
 
         // List View
@@ -157,6 +159,21 @@ public class ListActivity extends AppCompatActivity implements AddItemDialog.Lis
     private void goToHomeScreen() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
+    }
+    private void openRenameDialog() {
+        RenameListDialog dialog = new RenameListDialog();
+        Bundle info = new Bundle();
+        info.putInt("INDEX", -1);
+
+        // TODO: have rename dialog actually change the model?
+        // It's weird to pass an idex to the dialog as the dialog doesnt need it,
+        // and in this case, neither does the callback...
+
+        dialog.setArguments(info);
+        dialog.show(getSupportFragmentManager(), "Rename List"); // TODO: should this tag be in string res?
+    }
+    private void udpateToolbarTitle() {
+        toolbar.setTitle(shopList.getName());
     }
 
     private String secondsToString(int pTime) {
