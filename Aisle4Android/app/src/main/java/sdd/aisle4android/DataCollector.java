@@ -39,9 +39,10 @@ public class DataCollector implements TheApp.IEventListener, ShopList.IEventList
     }
     @Override
     public void onItemCollected(ShopItem item) {
+        if (item == lastItem) return;
+
         long time = System.currentTimeMillis() - lastCollectTime;
         data.add(new ItemToItemData(lastItem, item, time, stepsSinceLast));
-
 
         Log.d("debug", "Saved item to item data: ");
         if (lastItem == null) {
@@ -54,8 +55,6 @@ public class DataCollector implements TheApp.IEventListener, ShopList.IEventList
         Log.d("debug", "item2: " + item.getName());
         Log.d("debug", "time: " + time);
         Log.d("debug", "steps: " + stepsSinceLast);
-
-
 
         lastCollectTime = System.currentTimeMillis();
         stepsSinceLast = 0;
