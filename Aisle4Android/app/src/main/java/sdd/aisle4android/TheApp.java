@@ -14,8 +14,8 @@ import java.util.List;
 
 
 
-public class TheApp extends Application {
-//    public Event eventListsChanged = new Event();
+public class TheApp extends Application implements Event.IListener<ShopList> {
+    public Event<TheApp> eventListsChanged = new Event<TheApp>();
 
     private List<ShopList> shopLists;
     private boolean isShopping = false;
@@ -59,14 +59,22 @@ public class TheApp extends Application {
     }
     public void addShopList(ShopList list) {
         shopLists.add(list);
-//        eventListsChanged.fire();
+        list.eventNameChanged.attach(this);
+        eventListsChanged.fire(this);
     }
     public void removeShopList(ShopList list) {
         shopLists.remove(list);
-//        eventListsChanged.fire();
+        eventListsChanged.fire(this);
     }
     public void removeShopList(int index) {
         shopLists.remove(index);
-//        eventListsChanged.fire();
+        eventListsChanged.fire(this);
+    }
+
+    @Override
+    public void onEvent(Event e, ShopList arg) {
+        if (e == arg.eventNameChanged) {
+            eventListsChanged.fire(this);
+        }
     }
 }

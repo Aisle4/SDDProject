@@ -15,7 +15,7 @@ import android.view.Menu;
 
 
 public class HomeActivity extends AppCompatActivity
-        implements NewListDialog.Listener, RenameListDialog.Listener {
+        implements NewListDialog.Listener, RenameListDialog.Listener, Event.IListener<TheApp> {
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
@@ -24,12 +24,12 @@ public class HomeActivity extends AppCompatActivity
 
     // PUBLIC MODIFIERS
 
-//    @Override
-//    public void onEvent(Event e) {
-//        if (e == app.eventListsChanged) {
-//            populateList();
-//        }
-//    }
+    @Override
+    public void onEvent(Event e, TheApp app) {
+        if (e == app.eventListsChanged) {
+            populateList();
+        }
+    }
 
     public void onClickBtnNewList(View v) {
         DialogFragment dialog = new NewListDialog();
@@ -50,12 +50,10 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onNewListDialogConfirm(String listName) {
         app.addShopList(new ShopList(listName));
-        populateList();
         goToListScreen(app.getShopLists().size()-1);
     }
     public void onRenameListDialogConfirm(String listName, int index) {
         app.getShopList(index).rename(listName);
-        populateList();
     }
 
     @Override
@@ -66,7 +64,6 @@ public class HomeActivity extends AppCompatActivity
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
     @Override
@@ -88,7 +85,6 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case 1: // Delete
                 app.removeShopList(info.position);
-                populateList();
                 break;
         }
 
@@ -105,7 +101,7 @@ public class HomeActivity extends AppCompatActivity
         app = (TheApp)getApplicationContext();
 
         // Events
-//        app.eventListsChanged.attach(this);
+        app.eventListsChanged.attach(this);
 
         // Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.home_toolbar);
@@ -124,13 +120,12 @@ public class HomeActivity extends AppCompatActivity
                 onClickBtnList(position);
             }
         });
-//        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
-//            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                onLongClickBtnList(position);
-//                return true;
-//            }
-//        });
         registerForContextMenu(list);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        app.eventListsChanged.dettach(this);
     }
     private void populateList() {
         listArrayAdapter.clear();

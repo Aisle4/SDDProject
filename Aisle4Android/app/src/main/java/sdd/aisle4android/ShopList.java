@@ -9,6 +9,9 @@ import java.util.List;
 
 // TODO: implement method stubs
 public class ShopList {
+    public Event<ShopList> eventNameChanged = new Event<ShopList>();
+    public Event<ShopList> eventItemsChanged = new Event<ShopList>();
+
     private String name;
     private List<ShopItem> items;
 
@@ -38,15 +41,19 @@ public class ShopList {
 
     public void rename(String name) {
         this.name = name;
+        eventNameChanged.fire(this);
     }
     public void addItem(ShopItem item) {
         items.add(item);
+        eventItemsChanged.fire(this);
     }
     public void removeItem(ShopItem item) {
         items.remove(item);
+        eventItemsChanged.fire(this);
     }
     public void removeItem(int index) {
         items.remove(index);
+        eventItemsChanged.fire(this);
     }
     public void save() {
 

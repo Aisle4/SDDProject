@@ -18,7 +18,7 @@ import android.widget.ListView;
 
 
 public class ListActivity extends AppCompatActivity
-        implements AddItemDialog.Listener, RenameListDialog.Listener {
+        implements AddItemDialog.Listener, RenameListDialog.Listener, Event.IListener<ShopList> {
     private TheApp app;
     private ShopList shopList;
 
@@ -37,6 +37,16 @@ public class ListActivity extends AppCompatActivity
 
 
     // PUBLIC MODIFIERS
+
+    @Override
+    public void onEvent(Event e, ShopList list) {
+        if (e == list.eventItemsChanged) {
+            populateList();
+        }
+        else if (e == list.eventNameChanged) {
+            updateToolbarTitle();
+        }
+    }
 
     public void onClickBtnAddItem(View v) {
         DialogFragment dialog = new AddItemDialog();
@@ -71,7 +81,6 @@ public class ListActivity extends AppCompatActivity
     @Override
     public void onAddItemDialogConfirm(String itemName) {
         shopList.addItem(new ShopItem(itemName));
-        populateList();
     }
 
     @Override
@@ -108,7 +117,6 @@ public class ListActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case 0: // Delete
                 shopList.removeItem(info.position);
-                populateList();
                 break;
         }
 
@@ -117,7 +125,7 @@ public class ListActivity extends AppCompatActivity
     @Override
     public void onRenameListDialogConfirm(String listName, int index) {
         shopList.rename(listName);
-        udpateToolbarTitle();
+//        updateToolbarTitle();
     }
 
     // PRIVATE / PROTECTED MODIFIERS
@@ -137,9 +145,13 @@ public class ListActivity extends AppCompatActivity
         }
         shopList = app.getShopList(listIndex);
 
+        // Events
+        shopList.eventItemsChanged.attach(this);
+        shopList.eventNameChanged.attach(this);
+
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);
-        udpateToolbarTitle();
+        updateToolbarTitle();
         setSupportActionBar(toolbar);
 
         // List View
@@ -149,6 +161,12 @@ public class ListActivity extends AppCompatActivity
         ListView list = (ListView)findViewById(R.id.list_list);
         list.setAdapter(listArrayAdapter);
         registerForContextMenu(list);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        shopList.eventNameChanged.dettach(this);
+        shopList.eventItemsChanged.dettach(this);
     }
     private void populateList() {
         listArrayAdapter.clear();
@@ -172,7 +190,7 @@ public class ListActivity extends AppCompatActivity
         dialog.setArguments(info);
         dialog.show(getSupportFragmentManager(), "Rename List"); // TODO: should this tag be in string res?
     }
-    private void udpateToolbarTitle() {
+    private void updateToolbarTitle() {
         toolbar.setTitle(shopList.getName());
     }
 
