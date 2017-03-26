@@ -5,7 +5,7 @@ package sdd.aisle4android;
  */
 
 public class ShopItem {
-    public Event<ShopItem> eventCollected = new Event<ShopItem>();
+    public EventCollected eventCollected = new EventCollected();
 
     private String name;
     private boolean collected = false;
@@ -22,5 +22,16 @@ public class ShopItem {
     public void setCollected(boolean collected) {
         this.collected = collected;
         eventCollected.fire(this);
+    }
+
+    class EventCollected extends Event<IEventListener> {
+        public void fire(ShopItem item) {
+            for (IEventListener listener : listeners) {
+                listener.onItemCollected(item);
+            }
+        }
+    }
+    interface IEventListener {
+        public void onItemCollected(ShopItem item);
     }
 }

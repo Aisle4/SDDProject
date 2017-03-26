@@ -12,6 +12,8 @@ import java.util.List;
 
 
 public class TheApp extends Application {
+    public EventStartShopping eventStartShopping = new EventStartShopping();
+
     private List<ShopList> shopLists;
     private boolean isShopping = false;
     private long shopStartTimeMs;
@@ -45,9 +47,10 @@ public class TheApp extends Application {
 
     // PUBLIC MODIFIERS
 
-    public void startShopping() {
+    public void startShopping(ShopList list) {
         isShopping = true;
         shopStartTimeMs = System.currentTimeMillis();
+        eventStartShopping.fire(list);
     }
     public void endShopping() {
         isShopping = false;
@@ -61,4 +64,17 @@ public class TheApp extends Application {
     public void removeShopList(int index) {
         shopLists.remove(index);
     }
+
+
+    class EventStartShopping extends Event<IEventListener> {
+        public void fire(ShopList list) {
+            for (IEventListener listener : listeners) {
+                listener.onStartShopping(list);
+            }
+        }
+    }
+    interface IEventListener {
+        public void onStartShopping(ShopList list);
+    }
 }
+

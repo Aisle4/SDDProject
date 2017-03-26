@@ -8,8 +8,8 @@ import java.util.List;
  */
 
 // TODO: implement method stubs
-public class ShopList implements Event.IListener<ShopItem> {
-    public Event<ShopItem> msgItemCollected = new Event<ShopItem>();
+public class ShopList implements ShopItem.IEventListener {
+    public EventItemCollected eventItemCollected = new EventItemCollected();
 
     private String name;
     private List<ShopItem> items;
@@ -57,9 +57,19 @@ public class ShopList implements Event.IListener<ShopItem> {
     }
 
     @Override
-    public void onEvent(Event e, ShopItem arg) {
-        if (e == arg.eventCollected) {
-            msgItemCollected.fire(arg);
+    public void onItemCollected(ShopItem item) {
+        this.eventItemCollected.fire(item);
+    }
+
+
+    class EventItemCollected extends Event<IEventListener> {
+        public void fire(ShopItem item) {
+            for (IEventListener listener : listeners) {
+                listener.onItemCollected(item);
+            }
         }
+    }
+    interface IEventListener {
+        public void onItemCollected(ShopItem item);
     }
 }

@@ -44,7 +44,7 @@ public class ListActivity extends AppCompatActivity
         dialog.show(getSupportFragmentManager(), "Add Item"); // TODO: should this tag be in string res?
     }
     public void onClickBtnShop(View v) {
-        if (!app.isShopping()) app.startShopping();
+        if (!app.isShopping()) app.startShopping(shopList);
         else app.endShopping();
 
         Button btn = (Button)v;
