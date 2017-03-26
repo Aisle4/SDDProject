@@ -14,6 +14,9 @@ import java.util.List;
 public class TheApp extends Application {
     public EventStartShopping eventStartShopping = new EventStartShopping();
 
+    private DataCollector dataCollector;
+
+    // Shopper State
     private List<ShopList> shopLists;
     private boolean isShopping = false;
     private long shopStartTimeMs;
@@ -24,6 +27,7 @@ public class TheApp extends Application {
 
         // Load data
         shopLists = new ArrayList<>();
+        dataCollector = new DataCollector(this);
     }
 
 

@@ -1,5 +1,7 @@
 package sdd.aisle4android;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class DataCollector implements TheApp.IEventListener, ShopList.IEventList
         stepsSinceLast = 0;
         lastItem = null;
 
+        Log.d("debug", "START SHOPPING");
+
         // Events
         if (listInUse != null) {
             list.eventItemCollected.dettach(this);
@@ -37,6 +41,24 @@ public class DataCollector implements TheApp.IEventListener, ShopList.IEventList
     public void onItemCollected(ShopItem item) {
         long time = System.currentTimeMillis() - lastCollectTime;
         data.add(new ItemToItemData(lastItem, item, time, stepsSinceLast));
+
+
+        Log.d("debug", "Saved item to item data: ");
+        if (lastItem == null) {
+            Log.d("debug", "item1: null");
+        }
+        else {
+            Log.d("debug", "item1: " +  lastItem.getName());
+        }
+
+        Log.d("debug", "item2: " + item.getName());
+        Log.d("debug", "time: " + time);
+        Log.d("debug", "steps: " + stepsSinceLast);
+
+
+
+        lastCollectTime = System.currentTimeMillis();
+        stepsSinceLast = 0;
         lastItem = item;
     }
 }
