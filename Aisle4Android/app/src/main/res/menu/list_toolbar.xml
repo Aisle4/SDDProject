@@ -16,6 +16,7 @@
         android:title="00:00"
         app:showAsAction="always"
         android:checkable="false"
-        android:enabled="true" />
+        android:enabled="true"
+        android:clickable="false"/>
 
 </menu>

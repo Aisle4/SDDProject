@@ -12,11 +12,13 @@ public class ShopList implements ShopItem.IEventListener {
     public EventItemCollected eventItemCollected = new EventItemCollected();
 
     private String name;
+    private Long created;
     private List<ShopItem> items;
 
 
     public ShopList(String name) {
         this.name = name;
+        this.created = System.currentTimeMillis();
         items = new ArrayList<>();
     }
     public ShopList(String[] data) {
@@ -31,6 +33,9 @@ public class ShopList implements ShopItem.IEventListener {
     }
     public ShopItem getItem(int index) {
         return items.get(index);
+    }
+    public Long getCreated() {
+        return created;
     }
     public List<ShopItem> getItems() {
         return items; // TODO: make unmodifiable? and each item?

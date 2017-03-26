@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+import android.graphics.Paint;
 
 
 public class ListActivity extends AppCompatActivity
@@ -24,7 +27,7 @@ public class ListActivity extends AppCompatActivity
 
     private Toolbar toolbar;
     private MenuItem timerItem;
-    private ArrayAdapter<String> listArrayAdapter;
+    private ItemArrayAdapter listArrayAdapter;
 
     private Handler timerHandler;
     private Runnable timerUpdater = new Runnable() {
@@ -72,7 +75,7 @@ public class ListActivity extends AppCompatActivity
     @Override
     public void onAddItemDialogConfirm(String itemName) {
         shopList.addItem(new ShopItem(itemName));
-        populateList();
+        listArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -100,6 +103,9 @@ public class ListActivity extends AppCompatActivity
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
             menu.setHeaderTitle(shopList.getItem(info.position).getName());
             menu.add(Menu.NONE, 0, 0, R.string.delete_item);
+            if(shopList.getItem(info.position).getCollected()){
+                menu.add(Menu.NONE, 1, 0, R.string.uncheck_item);
+            }
         }
     }
     @Override
@@ -109,7 +115,11 @@ public class ListActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case 0: // Delete
                 shopList.removeItem(info.position);
-                populateList();
+                listArrayAdapter.notifyDataSetChanged();
+                break;
+            case 1: // Uncollect
+                shopList.getItem(info.position).setCollected(false);
+                listArrayAdapter.notifyDataSetChanged();
                 break;
         }
 
@@ -120,6 +130,10 @@ public class ListActivity extends AppCompatActivity
         shopList.rename(listName);
         updateToolbarTitle();
     }
+
+
+
+
 
 
     // PRIVATE / PROTECTED MODIFIERS
@@ -145,25 +159,25 @@ public class ListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // List View
-        listArrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1);
-        populateList();
+        listArrayAdapter = new ItemArrayAdapter(this, shopList.getItems());
         ListView list = (ListView)findViewById(R.id.list_list);
         list.setAdapter(listArrayAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                shopList.getItem(position).setCollected(true);
+                listArrayAdapter.notifyDataSetChanged();
+            }
+        });
         registerForContextMenu(list);
     }
     @Override
     protected void onStart() {
         super.onStart();
         updateToolbarTitle();
-        populateList();
+        listArrayAdapter.notifyDataSetChanged();
     }
-    private void populateList() {
-        listArrayAdapter.clear();
-        for (ShopItem item : shopList.getItems()) {
-            listArrayAdapter.add(item.getName());
-        }
-    }
+
     private void goToHomeScreen() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);

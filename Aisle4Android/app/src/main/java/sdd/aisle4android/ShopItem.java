@@ -24,6 +24,10 @@ public class ShopItem {
         eventCollected.fire(this);
     }
 
+    public Boolean getCollected(){
+        return collected;
+    }
+
     class EventCollected extends Event<IEventListener> {
         public void fire(ShopItem item) {
             for (IEventListener listener : listeners) {
