@@ -6,11 +6,17 @@ package sdd.aisle4android;
 
 public class ShopItem {
     private String name;
+    private boolean collected = false;
 
     public ShopItem(String name) {
         this.name = name;
     }
+
     public String getName() {
         return name;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
     }
 }
