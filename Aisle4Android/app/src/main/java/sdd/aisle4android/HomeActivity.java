@@ -24,13 +24,6 @@ public class HomeActivity extends AppCompatActivity
 
     // PUBLIC MODIFIERS
 
-//    @Override
-//    public void onEvent(Event e) {
-//        if (e == app.eventListsChanged) {
-//            populateList();
-//        }
-//    }
-
     public void onClickBtnNewList(View v) {
         DialogFragment dialog = new NewListDialog();
         dialog.show(getSupportFragmentManager(), "New List"); // TODO: should this tag be in string res?
@@ -104,9 +97,6 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         app = (TheApp)getApplicationContext();
 
-        // Events
-//        app.eventListsChanged.attach(this);
-
         // Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
@@ -124,13 +114,12 @@ public class HomeActivity extends AppCompatActivity
                 onClickBtnList(position);
             }
         });
-//        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
-//            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                onLongClickBtnList(position);
-//                return true;
-//            }
-//        });
         registerForContextMenu(list);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        populateList();
     }
     private void populateList() {
         listArrayAdapter.clear();

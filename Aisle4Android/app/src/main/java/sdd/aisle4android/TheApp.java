@@ -11,12 +11,7 @@ import java.util.List;
  */
 
 
-
-
-
 public class TheApp extends Application {
-//    public Event eventListsChanged = new Event();
-
     private List<ShopList> shopLists;
     private boolean isShopping = false;
     private long shopStartTimeMs;
@@ -59,14 +54,11 @@ public class TheApp extends Application {
     }
     public void addShopList(ShopList list) {
         shopLists.add(list);
-//        eventListsChanged.fire();
     }
     public void removeShopList(ShopList list) {
         shopLists.remove(list);
-//        eventListsChanged.fire();
     }
     public void removeShopList(int index) {
         shopLists.remove(index);
-//        eventListsChanged.fire();
     }
 }

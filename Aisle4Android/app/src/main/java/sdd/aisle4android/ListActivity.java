@@ -28,7 +28,8 @@ public class ListActivity extends AppCompatActivity
 
     private Handler timerHandler;
     private Runnable timerUpdater = new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
             String timeStr = secondsToString((int)(app.getShoppingTime() / 1000));
             timerItem.setTitle(timeStr);
             timerHandler.postDelayed(this, 1000);
@@ -117,8 +118,9 @@ public class ListActivity extends AppCompatActivity
     @Override
     public void onRenameListDialogConfirm(String listName, int index) {
         shopList.rename(listName);
-        udpateToolbarTitle();
+        updateToolbarTitle();
     }
+
 
     // PRIVATE / PROTECTED MODIFIERS
 
@@ -139,7 +141,7 @@ public class ListActivity extends AppCompatActivity
 
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);
-        udpateToolbarTitle();
+        updateToolbarTitle();
         setSupportActionBar(toolbar);
 
         // List View
@@ -149,6 +151,12 @@ public class ListActivity extends AppCompatActivity
         ListView list = (ListView)findViewById(R.id.list_list);
         list.setAdapter(listArrayAdapter);
         registerForContextMenu(list);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateToolbarTitle();
+        populateList();
     }
     private void populateList() {
         listArrayAdapter.clear();
@@ -172,7 +180,7 @@ public class ListActivity extends AppCompatActivity
         dialog.setArguments(info);
         dialog.show(getSupportFragmentManager(), "Rename List"); // TODO: should this tag be in string res?
     }
-    private void udpateToolbarTitle() {
+    private void updateToolbarTitle() {
         toolbar.setTitle(shopList.getName());
     }
 
