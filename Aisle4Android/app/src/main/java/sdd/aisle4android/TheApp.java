@@ -2,6 +2,7 @@ package sdd.aisle4android;
 
 import android.app.Application;
 import android.database.Observable;
+import android.os.SystemClock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class TheApp extends Application {
     }
     // Returns time since started shopping in ms
     public long getShoppingTime() {
-        long currentMs = System.currentTimeMillis();
+        long currentMs = SystemClock.elapsedRealtime();
         return currentMs - shopStartTimeMs;
     }
     public ShopList getShopList(int index) {
@@ -53,7 +54,7 @@ public class TheApp extends Application {
 
     public void startShopping(ShopList list) {
         isShopping = true;
-        shopStartTimeMs = System.currentTimeMillis();
+        shopStartTimeMs = SystemClock.elapsedRealtime();
         eventStartShopping.fire(list);
     }
     public void endShopping() {

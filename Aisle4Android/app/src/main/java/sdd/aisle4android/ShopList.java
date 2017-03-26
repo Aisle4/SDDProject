@@ -2,6 +2,8 @@ package sdd.aisle4android;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
+
 
 /**
  * Created by Robert Wild on 14/03/2017.
@@ -14,22 +16,37 @@ public class ShopList implements ShopItem.IEventListener {
     private String name;
     private Long created;
     private List<ShopItem> items;
-
+    private long creationDate;
 
     public ShopList(String name) {
         this.name = name;
         this.created = System.currentTimeMillis();
         items = new ArrayList<>();
+        creationDate = System.currentTimeMillis();// - (5) * (1000 * 60 * 60 * 24);
     }
     public ShopList(String[] data) {
 
     }
 
+    // STATIC FUNCTIONS
+
+    private static Calendar setMidnight(Calendar c) {
+        // TODO: In hindsight this might be useful to reuse and worth moving somewhere else in the code along with getCreationDate
+        // converts the time to midnight of the same day, allowing for comparison
+        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+        return c;
+    }
 
     // PUBLIC ACCESSORS
 
     public String getName() {
         return name;
+    }
+    public String getNameDate() {//TODO: this should be formatted better
+        return name + "    Created: " + getCreationDate();
     }
     public ShopItem getItem(int index) {
         return items.get(index);
@@ -39,6 +56,32 @@ public class ShopList implements ShopItem.IEventListener {
     }
     public List<ShopItem> getItems() {
         return items; // TODO: make unmodifiable? and each item?
+    }
+    public long getCreationDateMillis() { return creationDate; }
+    public String getCreationDate() {
+        //find each checkpoint (ie. today, yesterday) and compare
+        Calendar temp = Calendar.getInstance();
+        temp = setMidnight(temp);
+        if(creationDate > temp.getTimeInMillis()) { return "Today"; }
+
+        //yesterday
+        temp=Calendar.getInstance();
+        temp.add(Calendar.DAY_OF_YEAR,-1);//go back 1 day
+        temp=setMidnight(temp);
+        if(creationDate > temp.getTimeInMillis()) { return "Yesterday"; }
+
+        //one week
+        temp=Calendar.getInstance();
+        temp.add(Calendar.DAY_OF_YEAR,-7);//go back 7 day
+        temp=setMidnight(temp);
+        if(creationDate > temp.getTimeInMillis()) {
+            String[] days = new String[] { "The Day Before Time", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            temp.setTimeInMillis(creationDate);
+            return days[temp.get(Calendar.DAY_OF_WEEK)];
+        }
+        else {
+            return "Over One Week Ago";//TODO: be more descriptive -b / format dd/mm/yy
+        }
     }
 
 

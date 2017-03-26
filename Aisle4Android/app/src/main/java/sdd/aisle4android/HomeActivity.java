@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
     private void populateList() {
         listArrayAdapter.clear();
         for (ShopList list : app.getShopLists()) {
-            listArrayAdapter.add(list.getName());
+            listArrayAdapter.add(list.getNameDate());
         }
     }
     private void goToListScreen(int listIndex) {
