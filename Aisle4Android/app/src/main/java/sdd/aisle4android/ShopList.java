@@ -8,9 +8,12 @@ import java.util.List;
  */
 
 // TODO: implement method stubs
-public class ShopList {
+public class ShopList implements Event.IListener<ShopItem> {
+    public Event<ShopItem> msgItemCollected = new Event<ShopItem>();
+
     private String name;
     private List<ShopItem> items;
+
 
     public ShopList(String name) {
         this.name = name;
@@ -41,6 +44,7 @@ public class ShopList {
     }
     public void addItem(ShopItem item) {
         items.add(item);
+        item.eventCollected.attach(this);
     }
     public void removeItem(ShopItem item) {
         items.remove(item);
@@ -50,5 +54,12 @@ public class ShopList {
     }
     public void save() {
 
+    }
+
+    @Override
+    public void onEvent(Event e, ShopItem arg) {
+        if (e == arg.eventCollected) {
+            msgItemCollected.fire(arg);
+        }
     }
 }
