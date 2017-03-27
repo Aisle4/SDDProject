@@ -19,7 +19,7 @@ public class HomeActivity extends AppCompatActivity
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
-    private ArrayAdapter<String> listArrayAdapter;
+    private ListArrayAdapter listArrayAdapter;
 
 
     // PUBLIC MODIFIERS
@@ -43,12 +43,14 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onNewListDialogConfirm(String listName) {
         app.addShopList(new ShopList(listName));
-        populateList();
+        listArrayAdapter.notifyDataSetChanged();
+        //populateList();
         goToListScreen(app.getShopLists().size()-1);
     }
     public void onRenameListDialogConfirm(String listName, int index) {
         app.getShopList(index).rename(listName);
-        populateList();
+        listArrayAdapter.notifyDataSetChanged();
+        //populateList();
     }
 
     @Override
@@ -81,7 +83,8 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case 1: // Delete
                 app.removeShopList(info.position);
-                populateList();
+                listArrayAdapter.notifyDataSetChanged();
+                //populateList();
                 break;
         }
 
@@ -102,9 +105,8 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // List View
-        listArrayAdapter = new ArrayAdapter<String>(
-            this, android.R.layout.simple_list_item_1);
-        populateList();
+        listArrayAdapter = new ListArrayAdapter(this, app.getShopLists());
+        //populateList();
 
         ListView list = (ListView)findViewById(R.id.home_list);
         list.setAdapter(listArrayAdapter);
@@ -119,14 +121,15 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        populateList();
+        listArrayAdapter.notifyDataSetChanged();
+        //populateList();
     }
-    private void populateList() {
+    /*private void populateList() {
         listArrayAdapter.clear();
         for (ShopList list : app.getShopLists()) {
             listArrayAdapter.add(list.getNameDate());
         }
-    }
+    }*/
     private void goToListScreen(int listIndex) {
         Intent intent = new Intent(this, ListActivity.class);
         intent.putExtra(MSG_LIST_INDEX, listIndex);
