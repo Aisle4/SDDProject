@@ -15,11 +15,11 @@ import java.util.List;
  * Created by cameron on 3/26/17.
  **/
 
-public class ListArrayAdapter extends ArrayAdapter<ShopList> {
+ class ListArrayAdapter extends ArrayAdapter<ShopList> {
 
     private Context context;
 
-    public ListArrayAdapter(Context context, List<ShopList> ShopListList) {
+    ListArrayAdapter(Context context, List<ShopList> ShopListList) {
         super(context, 0, ShopListList);
         context = this.context;
     }
@@ -38,6 +38,9 @@ public class ListArrayAdapter extends ArrayAdapter<ShopList> {
 
         final TextView itemDate = (TextView) convertView.findViewById(R.id.listDate);
         itemDate.setText(shoplist.getCreationDate());
+
+        final TextView itemCount = (TextView) convertView.findViewById(R.id.itemCount);
+        itemCount.setText(String.format("%d items", shoplist.getItems().size()));
 
 
         return convertView;

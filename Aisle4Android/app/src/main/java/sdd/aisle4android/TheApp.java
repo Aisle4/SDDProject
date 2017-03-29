@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TheApp extends Application {
     private DataCollector dataCollector;
-    private Shopper shopper;
+    private Shopper shopper = new Shopper();
     private DatabaseManager database;
 
     @Override
@@ -24,6 +24,7 @@ public class TheApp extends Application {
         // Load data
         dataCollector = new DataCollector(this);
         database = new DatabaseManager();
+        //shopper = new Shopper();
     }
 
     public Shopper getShopper() {

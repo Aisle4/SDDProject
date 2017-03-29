@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#18a982</color>
     <color name="colorAccent">#18a982</color>
     <color name="grayedText">#999999</color>
+    <color name="black">#000000</color>
+
 </resources>

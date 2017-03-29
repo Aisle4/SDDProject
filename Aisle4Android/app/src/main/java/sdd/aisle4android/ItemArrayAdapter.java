@@ -17,11 +17,11 @@ import android.graphics.Color;
  * Created by cameron on 3/26/17.
  */
 
-public class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
+class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
 
     private Context context;
 
-    public ItemArrayAdapter(Context context, List<ShopItem> ShopItemList) {
+    ItemArrayAdapter(Context context, List<ShopItem> ShopItemList) {
         super(context, 0, ShopItemList);
         context = this.context;
     }
@@ -51,6 +51,13 @@ public class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
         return convertView;
 
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        //do sorting here
+        super.notifyDataSetChanged();
+    }
+
 
 
 }
