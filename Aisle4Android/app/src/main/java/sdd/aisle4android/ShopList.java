@@ -24,6 +24,7 @@ class ShopList implements ShopItem.IEventListener {
         items = new ArrayList<>();
         creationDate = System.currentTimeMillis();// - (5) * (1000 * 60 * 60 * 24);
     }
+
     public ShopList(String[] data) {
 
     }

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sdd.aisle4android">
     <uses-feature android:name="@string/step_detector" android:required="false"/>
+    uses-permission android:name="android.permission.INTERNET" />
     <application android:name="sdd.aisle4android.TheApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

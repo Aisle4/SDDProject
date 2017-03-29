@@ -15,6 +15,7 @@ import java.util.List;
 public class TheApp extends Application {
     private DataCollector dataCollector;
     private Shopper shopper;
+    private DatabaseManager database;
 
     @Override
     public void onCreate() {
@@ -22,6 +23,7 @@ public class TheApp extends Application {
 
         // Load data
         dataCollector = new DataCollector(this);
+        database = new DatabaseManager();
     }
 
     public Shopper getShopper() {
