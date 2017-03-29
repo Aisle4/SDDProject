@@ -18,13 +18,16 @@ import android.util.Log;
  * Created by John on 3/26/2017.
  */
 
-public class DatabaseManager extends AsyncTask {
-
-    public DatabaseManager(){}
-
+class DatabaseManager extends AsyncTask {
     private String baseLink = "http://www.carryncare.com/aisle4/server_copy.php" ;
 
-    public boolean addItem(String name) throws IOException {
+
+    DatabaseManager() {
+    }
+
+    // PUBLIC MODIFIERS
+
+    boolean addItem(String name) throws IOException {
         Log.d("DEBUG", "Add item launched");
 
         String command = "new item";
@@ -57,8 +60,7 @@ public class DatabaseManager extends AsyncTask {
         return builder.toString().compareTo("Values have been inserted successfully") == 0;
 
     }
-
-    public boolean addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
+    boolean addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
         Log.d("DEBUG", "Add Item to Item launched");
 
         String command = "new_item_to_item";
@@ -97,6 +99,9 @@ public class DatabaseManager extends AsyncTask {
         return builder.toString().compareTo("Values have been inserted successfully") == 0;
 
     }
+
+
+    // PRIVATE / PROTECTED MODIFIERS
 
     @Override
     protected Object doInBackground(Object[] params) {

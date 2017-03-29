@@ -120,7 +120,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         listArrayAdapter.notifyDataSetChanged();
-        //populateList();
     }
     private void goToListScreen(int listIndex) {
         Intent intent = new Intent(this, ListActivity.class);

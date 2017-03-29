@@ -40,6 +40,9 @@ class DataCollector implements Shopper.IEventListener, ShopList.IEventListener,
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
     }
 
+
+    // PUBLIC MODIFIERS
+
     @Override
     public void onStartShopping(ShopList list) {
         stepsSinceLast = 0;

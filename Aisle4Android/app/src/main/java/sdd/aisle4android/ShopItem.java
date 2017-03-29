@@ -15,18 +15,25 @@ class ShopItem {
         this.name = name;
     }
 
+
+    // PUBLIC ACCESSORS
+
     String getName() {
         return name;
     }
+    Boolean getCollected(){
+        return collected;
+    }
+
+
+    // PRIVATE MODIFIERS
 
     void setCollected(boolean collected) {
         this.collected = collected;
         eventCollected.fire(this);
     }
 
-    Boolean getCollected(){
-        return collected;
-    }
+
 
     class EventCollected extends Event<IEventListener> {
         void fire(ShopItem item) {
