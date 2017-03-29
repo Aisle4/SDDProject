@@ -14,6 +14,7 @@ import java.util.List;
 
 public class TheApp extends Application {
     public EventStartShopping eventStartShopping = new EventStartShopping();
+    public EventStopShopping eventStopShopping = new EventStopShopping();
 
     private DataCollector dataCollector;
 
@@ -59,6 +60,7 @@ public class TheApp extends Application {
     }
     public void endShopping() {
         isShopping = false;
+        eventStopShopping.fire();
     }
     public void addShopList(ShopList list) {
         shopLists.add(list);
@@ -71,6 +73,7 @@ public class TheApp extends Application {
     }
 
 
+    // TODO: Improve event system
     class EventStartShopping extends Event<IEventListener> {
         public void fire(ShopList list) {
             for (IEventListener listener : listeners) {
@@ -78,8 +81,16 @@ public class TheApp extends Application {
             }
         }
     }
+    class EventStopShopping extends Event<IEventListener> {
+        public void fire() {
+            for (IEventListener listener : listeners) {
+                listener.onStopShopping();
+            }
+        }
+    }
     interface IEventListener {
         public void onStartShopping(ShopList list);
+        public void onStopShopping();
     }
 }
 

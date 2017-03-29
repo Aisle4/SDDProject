@@ -1,5 +1,10 @@
 package sdd.aisle4android;
 
+import android.app.Application;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,33 +14,57 @@ import java.util.List;
  * Created by Robert Wild on 26/03/2017.
  */
 
-public class DataCollector implements TheApp.IEventListener, ShopList.IEventListener {
+class DataCollector implements TheApp.IEventListener, ShopList.IEventListener,
+        SensorEventListener {
+    private ShopList listInUse;
     private ShopItem lastItem = null;
-    private long lastCollectTime = 0;
-    private int stepsSinceLast = 0;
     private List<ItemToItemData> data = new ArrayList<ItemToItemData>();
 
-    private ShopList listInUse;
+    // Time
+    private long lastCollectTime = 0;
+
+    // Pedometer
+    private int stepsSinceLast = 0;
+    private SensorManager sensorManager;
+    private Sensor stepDetectorSensor;
 
 
-    public DataCollector(TheApp app) {
+    DataCollector(TheApp app) {
         app.eventStartShopping.attach(this);
+        app.eventStopShopping.attach(this);
+
+        // Pedometer
+        sensorManager = (SensorManager)app.getSystemService(Application.SENSOR_SERVICE);
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
     }
 
     @Override
     public void onStartShopping(ShopList list) {
-        lastCollectTime = System.currentTimeMillis();
         stepsSinceLast = 0;
+        lastCollectTime = System.currentTimeMillis();
         lastItem = null;
 
         Log.d("debug", "START SHOPPING");
 
         // Events
-        if (listInUse != null) {
-            list.eventItemCollected.dettach(this);
-        }
         list.eventItemCollected.attach(this);
         listInUse = list;
+
+        // Start recording steps
+        sensorManager.registerListener(this, stepDetectorSensor,
+                SensorManager.SENSOR_DELAY_FASTEST);
+    }
+    @Override
+    public void onStopShopping() {
+        Log.d("debug", "STOP SHOPPING");
+
+        // Events
+        if (listInUse != null) {
+            listInUse.eventItemCollected.dettach(this);
+        }
+
+        // Stop recording steps
+        sensorManager.unregisterListener(this, stepDetectorSensor);
     }
     @Override
     public void onItemCollected(ShopItem item) {
@@ -59,5 +88,18 @@ public class DataCollector implements TheApp.IEventListener, ShopList.IEventList
         lastCollectTime = System.currentTimeMillis();
         stepsSinceLast = 0;
         lastItem = item;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor;
+        if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            Log.d("debug", "STEP");
+            ++stepsSinceLast;
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
