@@ -44,13 +44,11 @@ public class HomeActivity extends AppCompatActivity
     public void onNewListDialogConfirm(String listName) {
         app.addShopList(new ShopList(listName));
         listArrayAdapter.notifyDataSetChanged();
-        //populateList();
         goToListScreen(app.getShopLists().size()-1);
     }
     public void onRenameListDialogConfirm(String listName, int index) {
         app.getShopList(index).rename(listName);
         listArrayAdapter.notifyDataSetChanged();
-        //populateList();
     }
 
     @Override
@@ -84,7 +82,6 @@ public class HomeActivity extends AppCompatActivity
             case 1: // Delete
                 app.removeShopList(info.position);
                 listArrayAdapter.notifyDataSetChanged();
-                //populateList();
                 break;
         }
 
@@ -106,7 +103,6 @@ public class HomeActivity extends AppCompatActivity
 
         // List View
         listArrayAdapter = new ListArrayAdapter(this, app.getShopLists());
-        //populateList();
 
         ListView list = (ListView)findViewById(R.id.home_list);
         list.setAdapter(listArrayAdapter);
@@ -124,12 +120,6 @@ public class HomeActivity extends AppCompatActivity
         listArrayAdapter.notifyDataSetChanged();
         //populateList();
     }
-    /*private void populateList() {
-        listArrayAdapter.clear();
-        for (ShopList list : app.getShopLists()) {
-            listArrayAdapter.add(list.getNameDate());
-        }
-    }*/
     private void goToListScreen(int listIndex) {
         Intent intent = new Intent(this, ListActivity.class);
         intent.putExtra(MSG_LIST_INDEX, listIndex);

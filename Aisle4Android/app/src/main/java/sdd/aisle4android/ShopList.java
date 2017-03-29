@@ -10,15 +10,15 @@ import java.util.Calendar;
  */
 
 // TODO: implement method stubs
-public class ShopList implements ShopItem.IEventListener {
-    public EventItemCollected eventItemCollected = new EventItemCollected();
+class ShopList implements ShopItem.IEventListener {
+    EventItemCollected eventItemCollected = new EventItemCollected();
 
     private String name;
     private Long created;
     private List<ShopItem> items;
     private long creationDate;
 
-    public ShopList(String name) {
+    ShopList(String name) {
         this.name = name;
         this.created = System.currentTimeMillis();
         items = new ArrayList<>();
@@ -42,23 +42,23 @@ public class ShopList implements ShopItem.IEventListener {
 
     // PUBLIC ACCESSORS
 
-    public String getName() {
+    String getName() {
         return name;
     }
-    public String getNameDate() {//TODO: this should be formatted better
+    String getNameDate() {//TODO: this should be formatted better
         return name + "    Created: " + getCreationDate();
     }
-    public ShopItem getItem(int index) {
+    ShopItem getItem(int index) {
         return items.get(index);
     }
-    public Long getCreated() {
+    Long getCreated() {
         return created;
     }
-    public List<ShopItem> getItems() {
+    List<ShopItem> getItems() {
         return items; // TODO: make unmodifiable? and each item?
     }
-    public long getCreationDateMillis() { return creationDate; }
-    public String getCreationDate() {
+    long getCreationDateMillis() { return creationDate; }
+    String getCreationDate() {
         //find each checkpoint (ie. today, yesterday) and compare
         Calendar temp = Calendar.getInstance();
         temp = setMidnight(temp);
@@ -87,20 +87,20 @@ public class ShopList implements ShopItem.IEventListener {
 
     // PUBLIC MODIFIERS
 
-    public void rename(String name) {
+    void rename(String name) {
         this.name = name;
     }
-    public void addItem(ShopItem item) {
+    void addItem(ShopItem item) {
         items.add(item);
         item.eventCollected.attach(this);
     }
-    public void removeItem(ShopItem item) {
+    void removeItem(ShopItem item) {
         items.remove(item);
     }
-    public void removeItem(int index) {
+    void removeItem(int index) {
         items.remove(index);
     }
-    public void save() {
+    void save() {
 
     }
 
@@ -111,7 +111,7 @@ public class ShopList implements ShopItem.IEventListener {
 
 
     class EventItemCollected extends Event<IEventListener> {
-        public void fire(ShopItem item) {
+        void fire(ShopItem item) {
             for (IEventListener listener : listeners) {
                 listener.onItemCollected(item);
             }

@@ -132,10 +132,6 @@ public class ListActivity extends AppCompatActivity
     }
 
 
-
-
-
-
     // PRIVATE / PROTECTED MODIFIERS
 
     @Override
