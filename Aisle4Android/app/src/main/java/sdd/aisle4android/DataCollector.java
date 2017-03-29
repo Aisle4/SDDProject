@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Robert Wild on 26/03/2017.
  */
 
-class DataCollector implements TheApp.IEventListener, ShopList.IEventListener,
+class DataCollector implements Shopper.IEventListener, ShopList.IEventListener,
         SensorEventListener {
     private ShopList listInUse;
     private ShopItem lastItem = null;
@@ -30,8 +30,10 @@ class DataCollector implements TheApp.IEventListener, ShopList.IEventListener,
 
 
     DataCollector(TheApp app) {
-        app.eventStartShopping.attach(this);
-        app.eventStopShopping.attach(this);
+        Shopper shopper = app.getShopper();
+
+        shopper.eventStartShopping.attach(this);
+        shopper.eventStopShopping.attach(this);
 
         // Pedometer
         sensorManager = (SensorManager)app.getSystemService(Application.SENSOR_SERVICE);

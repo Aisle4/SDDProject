@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity
     public static final String MSG_LIST_INDEX = "MsgListIndex";
 
     private TheApp app;
+    private Shopper shopper;
     private ListArrayAdapter listArrayAdapter;
 
 
@@ -42,12 +43,12 @@ public class HomeActivity extends AppCompatActivity
     }
     @Override
     public void onNewListDialogConfirm(String listName) {
-        app.addShopList(new ShopList(listName));
+        shopper.addShopList(new ShopList(listName));
         listArrayAdapter.notifyDataSetChanged();
-        goToListScreen(app.getShopLists().size()-1);
+        goToListScreen(shopper.getShopLists().size()-1);
     }
     public void onRenameListDialogConfirm(String listName, int index) {
-        app.getShopList(index).rename(listName);
+        shopper.getShopList(index).rename(listName);
         listArrayAdapter.notifyDataSetChanged();
     }
 
@@ -66,7 +67,7 @@ public class HomeActivity extends AppCompatActivity
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == R.id.home_list) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            menu.setHeaderTitle(app.getShopList(info.position).getName());
+            menu.setHeaderTitle(shopper.getShopList(info.position).getName());
             menu.add(Menu.NONE, 0, 0, R.string.rename_list);
             menu.add(Menu.NONE, 1, 1, R.string.delete_list);
         }
@@ -80,7 +81,7 @@ public class HomeActivity extends AppCompatActivity
                 openRenameDialog(info.position);
                 break;
             case 1: // Delete
-                app.removeShopList(info.position);
+                shopper.removeShopList(info.position);
                 listArrayAdapter.notifyDataSetChanged();
                 break;
         }
@@ -96,13 +97,14 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         app = (TheApp)getApplicationContext();
+        shopper = app.getShopper();
 
         // Toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.home_toolbar);
         setSupportActionBar(toolbar);
 
         // List View
-        listArrayAdapter = new ListArrayAdapter(this, app.getShopLists());
+        listArrayAdapter = new ListArrayAdapter(this, shopper.getShopLists());
 
         ListView list = (ListView)findViewById(R.id.home_list);
         list.setAdapter(listArrayAdapter);

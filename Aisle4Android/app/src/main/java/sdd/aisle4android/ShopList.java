@@ -118,6 +118,6 @@ class ShopList implements ShopItem.IEventListener {
         }
     }
     interface IEventListener {
-        public void onItemCollected(ShopItem item);
+        void onItemCollected(ShopItem item);
     }
 }

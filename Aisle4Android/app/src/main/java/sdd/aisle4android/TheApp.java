@@ -13,84 +13,19 @@ import java.util.List;
 
 
 public class TheApp extends Application {
-    public EventStartShopping eventStartShopping = new EventStartShopping();
-    public EventStopShopping eventStopShopping = new EventStopShopping();
-
     private DataCollector dataCollector;
-
-    // Shopper State
-    private List<ShopList> shopLists;
-    private boolean isShopping = false;
-    private long shopStartTimeMs;
+    private Shopper shopper;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         // Load data
-        shopLists = new ArrayList<>();
         dataCollector = new DataCollector(this);
     }
 
-
-    // PUBLIC ACCESSORS
-
-    public boolean isShopping() {
-        return isShopping;
-    }
-    // Returns time since started shopping in ms
-    public long getShoppingTime() {
-        long currentMs = SystemClock.elapsedRealtime();
-        return currentMs - shopStartTimeMs;
-    }
-    public ShopList getShopList(int index) {
-        return shopLists.get(index);
-    }
-    public List<ShopList> getShopLists() {
-        return shopLists; // TODO: make unmodifiable? and each item?
-    }
-
-
-    // PUBLIC MODIFIERS
-
-    public void startShopping(ShopList list) {
-        isShopping = true;
-        shopStartTimeMs = SystemClock.elapsedRealtime();
-        eventStartShopping.fire(list);
-    }
-    public void endShopping() {
-        isShopping = false;
-        eventStopShopping.fire();
-    }
-    public void addShopList(ShopList list) {
-        shopLists.add(list);
-    }
-    public void removeShopList(ShopList list) {
-        shopLists.remove(list);
-    }
-    public void removeShopList(int index) {
-        shopLists.remove(index);
-    }
-
-
-    // TODO: Improve event system
-    class EventStartShopping extends Event<IEventListener> {
-        public void fire(ShopList list) {
-            for (IEventListener listener : listeners) {
-                listener.onStartShopping(list);
-            }
-        }
-    }
-    class EventStopShopping extends Event<IEventListener> {
-        public void fire() {
-            for (IEventListener listener : listeners) {
-                listener.onStopShopping();
-            }
-        }
-    }
-    interface IEventListener {
-        public void onStartShopping(ShopList list);
-        public void onStopShopping();
+    public Shopper getShopper() {
+        return shopper;
     }
 }
 

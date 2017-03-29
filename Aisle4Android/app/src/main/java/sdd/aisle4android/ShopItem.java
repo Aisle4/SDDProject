@@ -36,6 +36,6 @@ class ShopItem {
         }
     }
     interface IEventListener {
-        public void onItemCollected(ShopItem item);
+        void onItemCollected(ShopItem item);
     }
 }

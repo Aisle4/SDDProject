@@ -23,6 +23,7 @@ import android.graphics.Paint;
 public class ListActivity extends AppCompatActivity
         implements AddItemDialog.Listener, RenameListDialog.Listener {
     private TheApp app;
+    private Shopper shopper;
     private ShopList shopList;
 
     private Toolbar toolbar;
@@ -33,7 +34,7 @@ public class ListActivity extends AppCompatActivity
     private Runnable timerUpdater = new Runnable() {
         @Override
         public void run() {
-            String timeStr = secondsToString((int)(app.getShoppingTime() / 1000));
+            String timeStr = secondsToString((int)(shopper.getShoppingTime() / 1000));
             timerItem.setTitle(timeStr);
             timerHandler.postDelayed(this, 1000);
         }
@@ -47,13 +48,13 @@ public class ListActivity extends AppCompatActivity
         dialog.show(getSupportFragmentManager(), "Add Item"); // TODO: should this tag be in string res?
     }
     public void onClickBtnShop(View v) {
-        if (!app.isShopping()) app.startShopping(shopList);
-        else app.endShopping();
+        if (!shopper.isShopping()) shopper.startShopping(shopList);
+        else shopper.endShopping();
 
         Button btn = (Button)v;
-        btn.setText(app.isShopping() ? R.string.btn_stop_shop : R.string.btn_shop);
+        btn.setText(shopper.isShopping() ? R.string.btn_stop_shop : R.string.btn_shop);
 
-        if (app.isShopping()) {
+        if (shopper.isShopping()) {
             // Update timer every second
             timerHandler.post(timerUpdater);
         }
@@ -89,7 +90,7 @@ public class ListActivity extends AppCompatActivity
                 return true;
 
             case R.id.list_toolbar_delete:
-                app.removeShopList(shopList);
+                shopper.removeShopList(shopList);
                 goToHomeScreen();
                 return true;
 
@@ -139,15 +140,16 @@ public class ListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         app = (TheApp)getApplicationContext();
+        shopper = app.getShopper();
 
         // Get list title from HomeActivity
         Intent intent = getIntent();
         int listIndex = intent.getIntExtra(HomeActivity.MSG_LIST_INDEX, -1);
-        if (listIndex < 0 || listIndex > app.getShopLists().size()) {
+        if (listIndex < 0 || listIndex > shopper.getShopLists().size()) {
             // TODO: error handling
             Log.e("error", "Invalid ShopList index on ListActivity Create");
         }
-        shopList = app.getShopList(listIndex);
+        shopList = shopper.getShopList(listIndex);
 
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);
