@@ -27,12 +27,12 @@ class DatabaseManager extends AsyncTask {
 
     // PUBLIC MODIFIERS
 
-    boolean addItem(String name) throws IOException {
-        Log.d("DEBUG", "Add item launched");
+    String addItem(String name) throws IOException {
+        //Log.d("DEBUG", "Add item launched");
 
-        String command = "new item";
+        String command = "new_item";
         URL url = new URL(baseLink);
-        String data  = URLEncoder.encode("name", StandardCharsets.UTF_8.name()) + "=" +
+        String data  = URLEncoder.encode("itemName", StandardCharsets.UTF_8.name()) + "=" +
                 URLEncoder.encode(name, StandardCharsets.UTF_8.name());
         data += "&" + URLEncoder.encode("command", StandardCharsets.UTF_8.name()) + "=" +
                 URLEncoder.encode(command, StandardCharsets.UTF_8.name());
@@ -43,7 +43,7 @@ class DatabaseManager extends AsyncTask {
         OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
         writer.write(data);
         writer.flush();
-        Log.d("DEBUG", "Request has been sent");
+        //Log.d("DEBUG", "Request has been sent");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -51,17 +51,17 @@ class DatabaseManager extends AsyncTask {
         String responseLine;
 
         while((responseLine = reader.readLine()) != null){
-            Log.d("DEBUG", "Response has been received");
+            //Log.d("DEBUG", "Response has been received");
             builder.append(responseLine);
             break;
         }
 
-        Log.d("DEBUG", builder.toString());
-        return builder.toString().compareTo("Values have been inserted successfully") == 0;
+        //Log.d("DEBUG", builder.toString());
+        return builder.toString();
 
     }
-    boolean addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
-        Log.d("DEBUG", "Add Item to Item launched");
+    String addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
+        //Log.d("DEBUG", "Add Item to Item launched");
 
         String command = "new_item_to_item";
         URL url = new URL(baseLink);
@@ -82,7 +82,7 @@ class DatabaseManager extends AsyncTask {
         OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
         writer.write(data);
         writer.flush();
-        Log.d("DEBUG", "Request has been sent");
+        //Log.d("DEBUG", "Request has been sent");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -90,13 +90,13 @@ class DatabaseManager extends AsyncTask {
         String responseLine;
 
         while((responseLine = reader.readLine()) != null){
-            Log.d("DEBUG", "Response has been received");
+            //Log.d("DEBUG", "Response has been received");
             builder.append(responseLine);
             break;
         }
 
-        Log.d("DEBUG", builder.toString());
-        return builder.toString().compareTo("Values have been inserted successfully") == 0;
+        //Log.d("DEBUG", builder.toString());
+        return builder.toString();
 
     }
 
@@ -105,11 +105,11 @@ class DatabaseManager extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] params) {
-        Log.d("DEBUG", "Thread Launched");
+        //Log.d("DEBUG", "Thread Launched");
         String command = (String)params[0];
 
         if(command.compareTo("new_item")==0 && params[1]!=null){
-            Log.d("DEBUG", "New Item command reached");
+            //Log.d("DEBUG", "New Item command reached");
             String itemName = (String)params[1];
             try {
                 addItem(itemName);
@@ -120,7 +120,7 @@ class DatabaseManager extends AsyncTask {
         }
 
         if(command.compareTo("new_item_to_item")==0 && params[1]!=null && params[2]!=null && params[3]!=null && params[4]!=null){
-            Log.d("DEBUG", "New Item_to_Item command reached");
+            //Log.d("DEBUG", "New Item_to_Item command reached");
             int item1ID = (int)params[1];
             int item2ID = (int)params[2];
             int steps = (int)params[3];

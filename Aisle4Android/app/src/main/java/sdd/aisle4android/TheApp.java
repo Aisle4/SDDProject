@@ -24,7 +24,7 @@ public class TheApp extends Application {
         // Load data
         dataCollector = new DataCollector(this);
         database = new DatabaseManager();
-        //shopper = new Shopper();
+        shopper = new Shopper();
     }
 
     public Shopper getShopper() {
