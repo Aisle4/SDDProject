@@ -13,18 +13,17 @@ import java.util.List;
 
 
 public class TheApp extends Application {
-    private DataCollector dataCollector;
-    private Shopper shopper = new Shopper();
+    private Shopper shopper;
     private DatabaseManager database;
+    private DataCollector dataCollector;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // Load data
-        dataCollector = new DataCollector(this);
-        database = new DatabaseManager();
         shopper = new Shopper();
+        database = new DatabaseManager();
+        dataCollector = new DataCollector(this);
     }
 
     public Shopper getShopper() {
