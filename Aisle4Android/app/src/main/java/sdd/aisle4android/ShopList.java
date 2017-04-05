@@ -1,6 +1,8 @@
 package sdd.aisle4android;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Calendar;
 
@@ -103,6 +105,30 @@ class ShopList implements ShopItem.IEventListener {
     }
     void save() {
 
+    }
+
+    void sortAlphabetical(){
+        Collections.sort(items, new Comparator<ShopItem>() {
+            @Override
+            public int compare(ShopItem o1, ShopItem o2) {
+                return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),o2.getName());
+            }
+        });
+    }
+
+    void sortChronological(){
+        Collections.sort(items, new Comparator<ShopItem>() {
+            @Override
+            public int compare(ShopItem o1, ShopItem o2) {
+                if(o1.getAddedDate() > o2.getAddedDate()){
+                    return 1;
+                }
+                if(o2.getAddedDate() > o1.getAddedDate()){
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 
     @Override

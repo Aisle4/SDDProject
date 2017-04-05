@@ -12,6 +12,10 @@
     <item android:title="@string/delete_list"
         android:id="@+id/list_toolbar_delete"
         android:icon="@android:drawable/ic_menu_delete" />
+    <item android:title="Sort by name"
+        android:id="@+id/list_sort_name" />
+    <item android:title="Sort by added"
+        android:id="@+id/list_sort_added" />
     <item android:id="@+id/list_toolbar_timer"
         android:title="00:00"
         app:showAsAction="always"

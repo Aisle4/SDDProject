@@ -94,6 +94,16 @@ public class ListActivity extends AppCompatActivity
                 goToHomeScreen();
                 return true;
 
+            case R.id.list_sort_name:
+                shopList.sortAlphabetical();
+                listArrayAdapter.notifyDataSetChanged();
+                return true;
+
+            case R.id.list_sort_added:
+                shopList.sortChronological();
+                listArrayAdapter.notifyDataSetChanged();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

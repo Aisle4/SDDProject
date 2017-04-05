@@ -9,10 +9,12 @@ class ShopItem {
 
     private String name;
     private boolean collected = false;
+    private long addedDate;
 
 
     ShopItem(String name) {
         this.name = name;
+        this.addedDate = System.currentTimeMillis();
     }
 
 
@@ -24,6 +26,7 @@ class ShopItem {
     Boolean getCollected(){
         return collected;
     }
+    long getAddedDate(){return addedDate;}
 
 
     // PRIVATE MODIFIERS
@@ -33,8 +36,6 @@ class ShopItem {
         eventCollected.fire(this);
     }
 
-
-
     class EventCollected extends Event<IEventListener> {
         void fire(ShopItem item) {
             for (IEventListener listener : listeners) {
@@ -42,7 +43,10 @@ class ShopItem {
             }
         }
     }
+
     interface IEventListener {
         void onItemCollected(ShopItem item);
     }
+
+
 }
