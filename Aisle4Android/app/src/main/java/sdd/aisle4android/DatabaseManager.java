@@ -10,6 +10,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -20,17 +26,60 @@ import android.util.Log;
 
 class DatabaseManager extends AsyncTask {
     private String baseLink = "http://www.carryncare.com/aisle4/server_copy.php" ;
+    public final String ITEM_TO_ITEM_MANUAL_COMMAND = "new_item_to_item";
+    public final String NEW_ITEM_COMMAND = "new_item";
+    public final String SUCCESS_MESSAGE = "Values have been inserted successfully";
+
+    private Queue<Object[]> commandQueue;
+    private Context context;
+
+    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
 
-    DatabaseManager() {
+
+    DatabaseManager(Context context)
+    {
+        this.context = context;
+        commandQueue = new PriorityQueue<>();
+    }
+
+
+    public void executeQueue(){
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if(isConnected) {
+            for (Object command[] : commandQueue) {
+                this.doInBackground(command);
+            }
+        }else{
+            Log.d("Debug", "Queue could not execute due to not having a connection");
+        }
     }
 
     // PUBLIC MODIFIERS
+    public void addItemQueue(String name){
+        Object queueCommand[] = {NEW_ITEM_COMMAND, name};
+        commandQueue.add(queueCommand);
+    }
 
-    String addItem(String name) throws IOException {
+    public void addItemToItemQueue(int item1ID, int item2ID, int steps, int travel_time){
+        Object queueCommand[] = {ITEM_TO_ITEM_MANUAL_COMMAND, item1ID, item2ID, steps, travel_time};
+        commandQueue.add(queueCommand);
+    }
+
+    private void asyncAddItem(String name){
+        this.execute(NEW_ITEM_COMMAND, name);
+    }
+
+    private void asyncNewItemToItem(int item1ID, int item2ID, int steps, int travel_time){
+        this.execute(ITEM_TO_ITEM_MANUAL_COMMAND, item1ID, item2ID, steps, travel_time);
+    }
+
+    private String addItem(String name) throws IOException {
         //Log.d("DEBUG", "Add item launched");
 
-        String command = "new_item";
+        String command = NEW_ITEM_COMMAND;
         URL url = new URL(baseLink);
         String data  = URLEncoder.encode("itemName", StandardCharsets.UTF_8.name()) + "=" +
                 URLEncoder.encode(name, StandardCharsets.UTF_8.name());
@@ -60,10 +109,10 @@ class DatabaseManager extends AsyncTask {
         return builder.toString();
 
     }
-    String addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
+    private String addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
         //Log.d("DEBUG", "Add Item to Item launched");
 
-        String command = "new_item_to_item";
+        String command = ITEM_TO_ITEM_MANUAL_COMMAND;
         URL url = new URL(baseLink);
         String data  = URLEncoder.encode("command", StandardCharsets.UTF_8.name()) + "=" +
                 URLEncoder.encode(command, StandardCharsets.UTF_8.name());
@@ -108,18 +157,18 @@ class DatabaseManager extends AsyncTask {
         //Log.d("DEBUG", "Thread Launched");
         String command = (String)params[0];
 
-        if(command.compareTo("new_item")==0 && params[1]!=null){
+        if(command.compareTo(NEW_ITEM_COMMAND)==0 && params[1]!=null){
             //Log.d("DEBUG", "New Item command reached");
             String itemName = (String)params[1];
             try {
                 addItem(itemName);
-                return "Values have been inserted successfully";
+                return SUCCESS_MESSAGE;
             } catch (IOException e) {
                 return e.getMessage();
             }
         }
 
-        if(command.compareTo("new_item_to_item")==0 && params[1]!=null && params[2]!=null && params[3]!=null && params[4]!=null){
+        if(command.compareTo(ITEM_TO_ITEM_MANUAL_COMMAND)==0 && params[1]!=null && params[2]!=null && params[3]!=null && params[4]!=null){
             //Log.d("DEBUG", "New Item_to_Item command reached");
             int item1ID = (int)params[1];
             int item2ID = (int)params[2];
@@ -128,7 +177,7 @@ class DatabaseManager extends AsyncTask {
 
             try {
                 addItemToItem(item1ID, item2ID, steps, travel_time);
-                return "Values have been inserted successfully";
+                return SUCCESS_MESSAGE;
             } catch (IOException e) {
                 return e.getMessage();
             }

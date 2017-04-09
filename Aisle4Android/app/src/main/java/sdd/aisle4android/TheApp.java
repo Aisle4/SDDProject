@@ -22,7 +22,7 @@ public class TheApp extends Application {
         super.onCreate();
 
         shopper = new Shopper();
-        database = new DatabaseManager();
+        database = new DatabaseManager(this);
         dataCollector = new DataCollector(this);
     }
 
