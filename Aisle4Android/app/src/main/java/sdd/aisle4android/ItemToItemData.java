@@ -5,14 +5,14 @@ package sdd.aisle4android;
  */
 
 class ItemToItemData {
-    ShopItem item1;
-    ShopItem item2;
+    String item1Name;
+    String item2Name;
     long time;
     int steps;
 
-    ItemToItemData(ShopItem item1, ShopItem item2, long time, int steps) {
-        this.item1 = item1;
-        this.item2 = item2;
+    ItemToItemData(String item1Name, String item2Name, long time, int steps) {
+        this.item1Name = item1Name;
+        this.item2Name = item2Name;
         this.time = time;
         this.steps = steps;
     }

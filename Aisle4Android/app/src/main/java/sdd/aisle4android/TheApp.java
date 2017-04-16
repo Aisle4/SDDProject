@@ -25,15 +25,15 @@ public class TheApp extends Application {
 
         // TEST DATA---
         List<ItemToItemData> testData = new ArrayList<>();
-        ShopItem apple = new ShopItem("Apple");
-        ShopItem mango = new ShopItem("Mango");
-        ShopItem carrot = new ShopItem("Carrot");
-        ShopItem pepper = new ShopItem("Pepper");
-        ShopItem milk = new ShopItem("Milk");
-        ShopItem eggs = new ShopItem("Eggs");
-        ShopItem butter = new ShopItem("Butter");
-        ShopItem pasta = new ShopItem("Pasta");
-        ShopItem rice = new ShopItem("Rice");
+        String apple = new ShopItem("Apple", this).getName();
+        String mango = new ShopItem("Mango", this).getName();
+        String carrot = new ShopItem("Carrot", this).getName();
+        String pepper = new ShopItem("Pepper", this).getName();
+        String milk = new ShopItem("Milk", this).getName();
+        String eggs = new ShopItem("Eggs", this).getName();
+        String butter = new ShopItem("Butter", this).getName();
+        String pasta = new ShopItem("Pasta", this).getName();
+        String rice = new ShopItem("Rice", this).getName();
         testData.add(new ItemToItemData(null, apple, 10, 10));
         testData.add(new ItemToItemData(apple, mango, 10, 10));
         testData.add(new ItemToItemData(mango, carrot, 10, 10));

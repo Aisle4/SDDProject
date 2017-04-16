@@ -113,10 +113,11 @@ class ShopList implements ShopItem.IEventListener {
         this.name = name;
         dbUpdateList();
     }
-    void addItem(ShopItem item) {
+    ShopItem addItem(ShopItem item) {
         dbAddItem(item);
         items.add(item);
         item.eventCollected.attach(this);
+        return item;
     }
     void addItemFromDB(ShopItem item) {
         items.add(item);

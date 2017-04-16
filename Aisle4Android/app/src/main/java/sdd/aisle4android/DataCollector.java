@@ -76,7 +76,7 @@ class DataCollector implements Shopper.IEventStartShopListener, Shopper.IEventSt
         if (item == lastItem) return;
 
         long time = System.currentTimeMillis() - lastCollectTime;
-        data.add(new ItemToItemData(lastItem, item, time, stepsSinceLast));
+        data.add(new ItemToItemData(lastItem.getName(), item.getName(), time, stepsSinceLast));
 
         Log.d("debug", "Saved item to item data: ");
         if (lastItem == null) {

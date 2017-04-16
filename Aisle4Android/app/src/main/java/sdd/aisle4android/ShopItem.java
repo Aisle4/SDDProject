@@ -74,6 +74,4 @@ class ShopItem {
     interface IEventListener {
         void onItemCollected(ShopItem item);
     }
-
-
 }
