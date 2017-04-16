@@ -36,6 +36,7 @@ class ItemOrderer implements Shopper.IEventStartShopListener, Shopper.IEventStop
 
     // TODO: make private - how to unit test? public, move event -> order code to OrdererController?
     void orderList(ShopList list, ShopItem nearestItem) {
+        // TODO: order list via funciton rather than total access to list from getItems()?
         Collections.sort(list.getItems(), new ComparatorItemDist(nearestItem));
     }
 

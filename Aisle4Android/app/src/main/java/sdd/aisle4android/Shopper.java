@@ -40,7 +40,7 @@ class Shopper {
         return activeShopList;
     }
     ShopItem getNearestItem() { return nearestItem; }
-    // Returns time since started shopping in ms
+    /** @return time since started shopping in ms */
     long getShoppingTime() {
         long currentMs = SystemClock.elapsedRealtime();
         return currentMs - shopStartTimeMs;
