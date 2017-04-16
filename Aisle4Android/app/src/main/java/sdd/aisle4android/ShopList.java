@@ -28,6 +28,7 @@ class ShopList implements ShopItem.IEventListener {
     ShopList(String name, Context context) {
         this.name = name;
         this.created = System.currentTimeMillis();
+        this.context = context;
         items = new ArrayList<>();
         creationDate = System.currentTimeMillis();// - (5) * (1000 * 60 * 60 * 24);
         this.uniqueID = UUID.randomUUID().toString();
