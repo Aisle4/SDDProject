@@ -1,10 +1,13 @@
 package sdd.aisle4android;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Calendar;
+import java.util.UUID;
 
 
 /**
@@ -19,13 +22,26 @@ class ShopList implements ShopItem.IEventListener {
     private Long created;
     private List<ShopItem> items;
     private long creationDate;
+    private String uniqueID;
+    private Context context;
 
-    ShopList(String name) {
+    ShopList(String name, Context context) {
         this.name = name;
         this.created = System.currentTimeMillis();
         items = new ArrayList<>();
         creationDate = System.currentTimeMillis();// - (5) * (1000 * 60 * 60 * 24);
+        this.uniqueID = UUID.randomUUID().toString();
     }
+
+    ShopList(String id, String name, Long creation, Context context) {
+        this.name = name;
+        this.created = creation;
+        this.creationDate = creation;
+        this.uniqueID = id;
+        this.context = context;
+        items = new ArrayList<>();
+    }
+
 
     public ShopList(String[] data) {
 
@@ -47,6 +63,9 @@ class ShopList implements ShopItem.IEventListener {
 
     String getName() {
         return name;
+    }
+    String getUniqueID() {
+        return uniqueID;
     }
     String getNameDate() {//TODO: this should be formatted better
         return name + "    Created: " + getCreationDate();
@@ -92,21 +111,47 @@ class ShopList implements ShopItem.IEventListener {
 
     void rename(String name) {
         this.name = name;
+        dbUpdateList();
     }
-    ShopItem addItem(ShopItem item) {
+    void addItem(ShopItem item) {
+        dbAddItem(item);
         items.add(item);
         item.eventCollected.attach(this);
-        return item;
+    }
+    void addItemFromDB(ShopItem item) {
+        items.add(item);
+        item.eventCollected.attach(this);
     }
     void removeItem(ShopItem item) {
         items.remove(item);
+        dbDeleteItem(item);
     }
     void removeItem(int index) {
         items.remove(index);
+        dbDeleteItem(items.get(index));
     }
-    void save() {
 
+
+    // LOCAL DATABASE MODIFIERS
+
+    void dbAddItem(ShopItem item) {
+        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
+        db.addItem(uniqueID, item);
+        db.close();
     }
+
+    void dbDeleteItem(ShopItem item) {
+        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
+        db.deleteItem(item);
+        db.close();
+    }
+
+    void dbUpdateList() {
+        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
+        db.updateList(this);
+        db.close();
+    }
+
 
     void sortAlphabetical(){
         Collections.sort(items, new Comparator<ShopItem>() {

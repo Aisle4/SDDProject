@@ -4,6 +4,8 @@ package sdd.aisle4android;
  * Created by Robert Wild on 14/03/2017.
  */
 
+import android.content.Context;
+
 import java.util.UUID;
 
 class ShopItem {
@@ -13,20 +15,23 @@ class ShopItem {
     private boolean collected = false;
     private long addedDate;
     private String uniqueID;
+    private Context context;
 
 
 
-    ShopItem(String name) {
+    ShopItem(String name, Context context) {
         this.name = name;
         this.addedDate = System.currentTimeMillis();
         this.uniqueID = UUID.randomUUID().toString();
+        this.context = context;
     }
 
-    ShopItem(String name, boolean collected, long addedDate, String uniqueID){
+    ShopItem(String name, boolean collected, long addedDate, String uniqueID, Context context){
         this.name = name;
         this.collected = collected;
         this.addedDate = addedDate;
         this.uniqueID = uniqueID;
+        this.context = context;
     }
 
 
@@ -41,11 +46,20 @@ class ShopItem {
     }
     long getAddedDate(){return addedDate;}
 
+    // LOCAL DATABASE MODIFIERS
+
+    void updateItemDB(){
+        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
+        db.updateItem(this);
+        db.close();
+    }
+
 
     // PRIVATE MODIFIERS
 
     void setCollected(boolean collected) {
         this.collected = collected;
+        updateItemDB();
         eventCollected.fire(this);
     }
 

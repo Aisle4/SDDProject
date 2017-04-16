@@ -42,7 +42,7 @@ public class HomeActivity extends AppCompatActivity
     }
     @Override
     public void onNewListDialogConfirm(String listName) {
-        shopper.addShopList(new ShopList(listName));
+        shopper.addShopList(new ShopList(listName, this));
         listArrayAdapter.notifyDataSetChanged();
         goToListScreen(shopper.getShopLists().size()-1);
     }

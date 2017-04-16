@@ -75,7 +75,7 @@ public class ListActivity extends AppCompatActivity
     }
     @Override
     public void onAddItemDialogConfirm(String itemName) {
-        shopper.addShopItem(shopList, new ShopItem(itemName));
+        shopList.addItem(new ShopItem(itemName, this));
         listArrayAdapter.notifyDataSetChanged();
     }
 
@@ -125,20 +125,21 @@ public class ListActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case 0: // Delete
-                shopper.removeItem(shopList, info.position);
+                shopList.removeItem(info.position);
                 listArrayAdapter.notifyDataSetChanged();
                 break;
             case 1: // Uncollect
-                shopper.setCollected(shopList.getItem(info.position), false);
+                shopList.getItem(info.position).setCollected(false);
                 listArrayAdapter.notifyDataSetChanged();
                 break;
         }
 
         return true;
     }
+
     @Override
     public void onRenameListDialogConfirm(String listName, int index) {
-        shopper.shopListRename(shopList, listName);
+        shopList.rename(listName);
         updateToolbarTitle();
     }
 
@@ -173,7 +174,7 @@ public class ListActivity extends AppCompatActivity
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                shopper.setCollected(shopList.getItem(position), true);
+                shopList.getItem(position).setCollected(true);
                 listArrayAdapter.notifyDataSetChanged();
             }
         });

@@ -84,31 +84,22 @@ class Shopper {
         db.close();
         shopLists.remove(index);
     }
-    void shopListRename(ShopList list, String name) {
+
+
+
+    /*void shopListRename(ShopList list, String name) {
         list.rename(name);
-        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
-        db.updateList(list);
-        db.close();
     }
     void addShopItem(ShopList list, ShopItem item) {
         list.addItem(item);
-        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
-        db.addItem(list, item);
-        db.close();
     }
     void removeItem(ShopList list, int position) {
         ShopItem item = list.getItem(position);
-        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
-        db.deleteItem(item);
-        db.close();
         list.removeItem(item);
     }
     void setCollected(ShopItem item, boolean collected) {
         item.setCollected(collected);
-        LocalDatabaseHelper db = new LocalDatabaseHelper(context);
-        db.updateItem(item);
-        db.close();
-    }
+    }*/
 
 
 

@@ -37,10 +37,12 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
     private static final String LIST_KEY = "listkey";
     private static final String COLLECTED_KEY = "collected";
     private static final String DATE_KEY = "created";
+    private Context context;
 
 
     public LocalDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -78,13 +80,13 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addItem(ShopList shopList, ShopItem shopItem){
+    public void addItem(String uniqueID, ShopItem shopItem){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(ITEM_ID_KEY, shopItem.getName());
         values.put(ITEM_NAME, shopItem.getName());
-        values.put(LIST_KEY, shopList.getUniqueID());
+        values.put(LIST_KEY, uniqueID);
         values.put(COLLECTED_KEY, shopItem.getCollected());
         values.put(KEY_DATE, shopItem.getAddedDate());
 
@@ -170,7 +172,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         ShopList shopList;
         if (cursor.moveToFirst()) {
             shopList = new ShopList(cursor.getString(0),
-                            cursor.getString(1), Long.parseLong(cursor.getString(2)));
+                            cursor.getString(1), Long.parseLong(cursor.getString(2)), context);
         }
         else {
             return null;
@@ -185,8 +187,8 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 boolean collected = (1 == Integer.parseInt(cursor.getString(3)));
                 long dateAdded = Long.parseLong(cursor.getString(4));
                 String id = cursor.getString(0);
-                ShopItem shopItem = new ShopItem(name, collected, dateAdded, id);
-                shopList.addItem(shopItem);
+                ShopItem shopItem = new ShopItem(name, collected, dateAdded, id, context);
+                shopList.addItemFromDB(shopItem);
             } while (cursor.moveToNext());
         }
         cursor.close();
