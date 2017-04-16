@@ -1,13 +1,11 @@
 package sdd.aisle4android;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Calendar;
-import java.util.UUID;
+
 
 /**
  * Created by Robert Wild on 14/03/2017.
@@ -20,23 +18,13 @@ class ShopList implements ShopItem.IEventListener {
     private String name;
     private Long created;
     private List<ShopItem> items;
-    private Long creationDate;
-    private String uniqueID;
+    private long creationDate;
 
     ShopList(String name) {
         this.name = name;
         this.created = System.currentTimeMillis();
-        this.uniqueID = UUID.randomUUID().toString();
         items = new ArrayList<>();
         creationDate = System.currentTimeMillis();// - (5) * (1000 * 60 * 60 * 24);
-    }
-
-    ShopList(String id, String name, Long creation){
-        this.name = name;
-        this.created = creation;
-        this.creationDate = creation;
-        this.uniqueID = id;
-        items = new ArrayList<>();
     }
 
     public ShopList(String[] data) {
@@ -57,8 +45,11 @@ class ShopList implements ShopItem.IEventListener {
 
     // PUBLIC ACCESSORS
 
-    public String getName() {
+    String getName() {
         return name;
+    }
+    String getNameDate() {//TODO: this should be formatted better
+        return name + "    Created: " + getCreationDate();
     }
     ShopItem getItem(int index) {
         return items.get(index);
@@ -66,10 +57,10 @@ class ShopList implements ShopItem.IEventListener {
     Long getCreated() {
         return created;
     }
-    String getUniqueID() { return uniqueID; }
     List<ShopItem> getItems() {
         return items; // TODO: make unmodifiable? and each item?
     }
+    long getCreationDateMillis() { return creationDate; }
     String getCreationDate() {
         //find each checkpoint (ie. today, yesterday) and compare
         Calendar temp = Calendar.getInstance();
@@ -99,12 +90,17 @@ class ShopList implements ShopItem.IEventListener {
 
     // PUBLIC MODIFIERS
 
-    void rename(String name) { this.name = name; }
-    void addItem(ShopItem item) {
+    void rename(String name) {
+        this.name = name;
+    }
+    ShopItem addItem(ShopItem item) {
         items.add(item);
         item.eventCollected.attach(this);
+        return item;
     }
-    void removeItem(ShopItem item) { items.remove(item); }
+    void removeItem(ShopItem item) {
+        items.remove(item);
+    }
     void removeItem(int index) {
         items.remove(index);
     }
