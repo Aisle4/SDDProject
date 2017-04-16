@@ -13,8 +13,10 @@ import java.util.List;
 class Shopper {
     EventStartShopping eventStartShopping = new EventStartShopping();
     EventStopShopping eventStopShopping = new EventStopShopping();
+    EventLocationUpdated eventLocationUpdated = new EventLocationUpdated();
 
     // Shopper State
+    private ShopList activeShopList;
     private List<ShopList> shopLists;
     private boolean isShopping = false;
     private long shopStartTimeMs;
@@ -33,6 +35,10 @@ class Shopper {
     boolean isShopping() {
         return isShopping;
     }
+    ShopList getActiveList() {
+        return activeShopList;
+    }
+    ShopItem getNearestItem() { return null; }
     // Returns time since started shopping in ms
     long getShoppingTime() {
         long currentMs = SystemClock.elapsedRealtime();
@@ -50,12 +56,14 @@ class Shopper {
 
     void startShopping(ShopList list) {
         isShopping = true;
+        activeShopList = list;
         shopStartTimeMs = SystemClock.elapsedRealtime();
-        eventStartShopping.fire(list);
+        eventStartShopping.fire(this);
     }
     void endShopping() {
         isShopping = false;
-        eventStopShopping.fire();
+        activeShopList = null;
+        eventStopShopping.fire(this);
     }
     void addShopList(ShopList list) {
         shopLists.add(list);
@@ -104,22 +112,34 @@ class Shopper {
 
 
     // TODO: Improve event system
-    class EventStartShopping extends Event<IEventListener> {
-        void fire(ShopList list) {
-            for (IEventListener listener : listeners) {
-                listener.onStartShopping(list);
+    class EventStartShopping extends Event<IEventStartShopListener> {
+        void fire(Shopper shopper) {
+            for (IEventStartShopListener listener : listeners) {
+                listener.onStartShopping(shopper);
             }
         }
     }
-    class EventStopShopping extends Event<IEventListener> {
-        void fire() {
-            for (IEventListener listener : listeners) {
-                listener.onStopShopping();
+    class EventStopShopping extends Event<IEventStopShopListener> {
+        void fire(Shopper shopper) {
+            for (IEventStopShopListener listener : listeners) {
+                listener.onStopShopping(shopper);
             }
         }
     }
-    interface IEventListener {
-        void onStartShopping(ShopList list);
-        void onStopShopping();
+    class EventLocationUpdated extends Event<IEventLocationUpdatedListener> {
+        void fire(Shopper shopper, ShopItem nearestItem) {
+            for (IEventLocationUpdatedListener listener : listeners) {
+                listener.onLocationUpdated(shopper, nearestItem);
+            }
+        }
+    }
+    interface IEventStartShopListener {
+        void onStartShopping(Shopper shopper);
+    }
+    interface IEventStopShopListener {
+        void onStopShopping(Shopper shopper);
+    }
+    interface IEventLocationUpdatedListener {
+        void onLocationUpdated(Shopper shopper, ShopItem nearestItem);
     }
 }

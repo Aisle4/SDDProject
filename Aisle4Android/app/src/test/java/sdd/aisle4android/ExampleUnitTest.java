@@ -47,8 +47,8 @@ public class ExampleUnitTest {
         assertTrue(list.getItem(0) == apple && list.getItem(1) == orange);
 
         // Order
-        ItemOrderer orderer = new ItemOrderer(null, data);
-        orderer.orderList(list);
+        ItemOrderer orderer = new ItemOrderer(null, null, data);
+        orderer.orderList(list, null);
 
         // Post conditions
         assertTrue(list.getItem(0) == orange && list.getItem(1) == apple);

@@ -14,8 +14,8 @@ import java.util.List;
  * Created by Robert Wild on 26/03/2017.
  */
 
-class DataCollector implements Shopper.IEventListener, ShopList.IEventListener,
-        SensorEventListener {
+class DataCollector implements Shopper.IEventStartShopListener, Shopper.IEventStopShopListener,
+        ShopList.IEventListener, SensorEventListener {
     private ShopList listInUse;
     private ShopItem lastItem = null;
     private List<ItemToItemData> data = new ArrayList<ItemToItemData>();
@@ -44,7 +44,7 @@ class DataCollector implements Shopper.IEventListener, ShopList.IEventListener,
     // PUBLIC MODIFIERS
 
     @Override
-    public void onStartShopping(ShopList list) {
+    public void onStartShopping(Shopper shopper) {
         stepsSinceLast = 0;
         lastCollectTime = System.currentTimeMillis();
         lastItem = null;
@@ -52,15 +52,15 @@ class DataCollector implements Shopper.IEventListener, ShopList.IEventListener,
         Log.d("debug", "START SHOPPING");
 
         // Events
-        list.eventItemCollected.attach(this);
-        listInUse = list;
+        listInUse = shopper.getActiveList();
+        listInUse.eventItemCollected.attach(this);
 
         // Start recording steps
         sensorManager.registerListener(this, stepDetectorSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
     }
     @Override
-    public void onStopShopping() {
+    public void onStopShopping(Shopper shopper) {
         Log.d("debug", "STOP SHOPPING");
 
         // Events

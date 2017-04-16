@@ -11,27 +11,32 @@ import java.util.List;
  * Created by Robert Wild on 05/04/2017.
  */
 
-class ItemOrderer {
+class ItemOrderer implements Shopper.IEventStartShopListener, Shopper.IEventStopShopListener,
+        Shopper.IEventLocationUpdatedListener {
+
     private List<ItemToItemData> data;
     private DatabaseManager dbManager;
 
-    public ItemOrderer(DatabaseManager dbManager) {
-        this.dbManager = dbManager;
-        data = new ArrayList<>();
-    }
-    public ItemOrderer(DatabaseManager dbManager, List<ItemToItemData> data) {
+    public ItemOrderer(Shopper shopper, DatabaseManager dbManager, List<ItemToItemData> data) {
         this.dbManager = dbManager;
         this.data = data;
+        shopper.eventStartShopping.attach(this);
+        shopper.eventStopShopping.attach(this);
+        shopper.eventLocationUpdated.attach(this);
     }
 
-    public void onStartShopping(ShopList list) {
-
+    public void onStartShopping(Shopper shopper) {
+        orderList(shopper.getActiveList(), shopper.getNearestItem());
+    }
+    public void onStopShopping(Shopper shopper) {
+    }
+    public void onLocationUpdated(Shopper shopper, ShopItem nearest) {
+        orderList(shopper.getActiveList(), nearest);
     }
 
-    // TODO: make private - how to unit test?
-    public void orderList(ShopList list) {
-        ShopItem closestItem = null; // Store entrance
-        Collections.sort(list.getItems(), new ComparatorItemDist(closestItem));
+    // TODO: make private - how to unit test? public, move event -> order code to OrdererController?
+    void orderList(ShopList list, ShopItem nearestItem) {
+        Collections.sort(list.getItems(), new ComparatorItemDist(nearestItem));
     }
 
     private float getItemDistance(ShopItem item1, ShopItem item2) {
