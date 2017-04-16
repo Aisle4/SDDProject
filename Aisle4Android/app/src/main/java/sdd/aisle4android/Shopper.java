@@ -13,12 +13,13 @@ import java.util.List;
 class Shopper {
     EventStartShopping eventStartShopping = new EventStartShopping();
     EventStopShopping eventStopShopping = new EventStopShopping();
-    EventLocationUpdated eventLocationUpdated = new EventLocationUpdated();
+    EventLocationUpdated eventLocationUpdated = new EventLocationUpdated(); // TODO: fire this event on item collected
 
     // Shopper State
-    private ShopList activeShopList;
     private List<ShopList> shopLists;
     private boolean isShopping = false;
+    private ShopList activeShopList;
+    private ShopItem nearestItem = null;
     private long shopStartTimeMs;
     private Context context;
 
@@ -38,7 +39,7 @@ class Shopper {
     ShopList getActiveList() {
         return activeShopList;
     }
-    ShopItem getNearestItem() { return null; }
+    ShopItem getNearestItem() { return nearestItem; }
     // Returns time since started shopping in ms
     long getShoppingTime() {
         long currentMs = SystemClock.elapsedRealtime();
