@@ -3,7 +3,6 @@ package sdd.aisle4android;
 import android.content.Context;
 import android.os.SystemClock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,34 +103,34 @@ class Shopper {
 
 
     // TODO: Improve event system
-    class EventStartShopping extends Event<IEventStartShopListener> {
+    class EventStartShopping extends Event<IEarStartShopping> {
         void fire(Shopper shopper) {
-            for (IEventStartShopListener listener : listeners) {
+            for (IEarStartShopping listener : listeners) {
                 listener.onStartShopping(shopper);
             }
         }
     }
-    class EventStopShopping extends Event<IEventStopShopListener> {
+    interface IEarStartShopping {
+        void onStartShopping(Shopper shopper);
+    }
+    class EventStopShopping extends Event<IEarStopShopping> {
         void fire(Shopper shopper) {
-            for (IEventStopShopListener listener : listeners) {
+            for (IEarStopShopping listener : listeners) {
                 listener.onStopShopping(shopper);
             }
         }
     }
-    class EventLocationUpdated extends Event<IEventLocationUpdatedListener> {
+    interface IEarStopShopping {
+        void onStopShopping(Shopper shopper);
+    }
+    class EventLocationUpdated extends Event<IEarLocationUpdated> {
         void fire(Shopper shopper, ShopItem nearestItem) {
-            for (IEventLocationUpdatedListener listener : listeners) {
+            for (IEarLocationUpdated listener : listeners) {
                 listener.onLocationUpdated(shopper, nearestItem);
             }
         }
     }
-    interface IEventStartShopListener {
-        void onStartShopping(Shopper shopper);
-    }
-    interface IEventStopShopListener {
-        void onStopShopping(Shopper shopper);
-    }
-    interface IEventLocationUpdatedListener {
+    interface IEarLocationUpdated {
         void onLocationUpdated(Shopper shopper, ShopItem nearestItem);
     }
 }

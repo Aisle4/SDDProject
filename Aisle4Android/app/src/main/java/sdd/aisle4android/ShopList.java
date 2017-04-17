@@ -132,6 +132,10 @@ class ShopList implements ShopItem.IEventListener {
         items.remove(index);
         dbDeleteItem(items.get(index));
     }
+    void reorder(List<ShopItem> newItemsList) {
+        // TODO: better way to do this...
+
+    }
 
 
     // LOCAL DATABASE MODIFIERS
@@ -185,14 +189,24 @@ class ShopList implements ShopItem.IEventListener {
     }
 
 
-    class EventItemCollected extends Event<IEventListener> {
+    class EventItemCollected extends Event<IEarItemCollected> {
         void fire(ShopItem item) {
-            for (IEventListener listener : listeners) {
+            for (IEarItemCollected listener : listeners) {
                 listener.onItemCollected(item);
             }
         }
     }
-    interface IEventListener {
+    interface IEarItemCollected {
         void onItemCollected(ShopItem item);
+    }
+    class EventOrderChanged extends Event<IEarOrderChanged> {
+        void fire(ShopItem item) {
+            for (IEarOrderChanged listener : listeners) {
+                listener.onOrderChanged(item);
+            }
+        }
+    }
+    interface IEarOrderChanged {
+        void onOrderChanged(ShopItem item);
     }
 }

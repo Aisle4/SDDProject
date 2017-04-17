@@ -14,8 +14,8 @@ import java.util.List;
  * Created by Robert Wild on 26/03/2017.
  */
 
-class DataCollector implements Shopper.IEventStartShopListener, Shopper.IEventStopShopListener,
-        ShopList.IEventListener, SensorEventListener {
+class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
+        ShopList.IEarItemCollected, SensorEventListener {
     private ShopList listInUse;
     private ShopItem lastItem = null;
     private List<ItemToItemData> data = new ArrayList<ItemToItemData>();

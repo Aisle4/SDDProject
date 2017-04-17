@@ -1,29 +1,19 @@
 package sdd.aisle4android;
 
-import android.util.Log;
-
-import com.google.common.collect.SortedMultiset;
-import com.google.common.collect.TreeMultiset;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * Created by Robert Wild on 05/04/2017.
  */
 
-class ItemOrderer implements Shopper.IEventStartShopListener, Shopper.IEventStopShopListener,
-        Shopper.IEventLocationUpdatedListener {
+class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
+        Shopper.IEarLocationUpdated {
 
     private ItemGraph graph;
 
@@ -44,9 +34,10 @@ class ItemOrderer implements Shopper.IEventStartShopListener, Shopper.IEventStop
         orderList(shopper.getActiveList(), nearest);
     }
 
-    // TODO: make private - how to unit test? public, move event -> order code to OrdererController?
+    // TODO: make private - how to unit test? public, move event handling / ordering commencing code to OrdererController?
     void orderList(ShopList list, ShopItem nearestItem) {
         // TODO: order list via function rather than total access to list from getItems()?
+        // TODO: use custom sort function instead of comparator to avoid redundant dijkstra's calculations
         Collections.sort(list.getItems(), new ComparatorItemDist(nearestItem));
     }
 
