@@ -12,12 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
-import android.graphics.Paint;
 
 
 public class ListActivity extends AppCompatActivity
@@ -119,7 +115,7 @@ public class ListActivity extends AppCompatActivity
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
             menu.setHeaderTitle(shopList.getItem(info.position).getName());
             menu.add(Menu.NONE, 0, 0, R.string.delete_item);
-            if(shopList.getItem(info.position).getCollected()){
+            if(shopList.getItem(info.position).isCollected()){
                 menu.add(Menu.NONE, 1, 0, R.string.uncheck_item);
             }
         }

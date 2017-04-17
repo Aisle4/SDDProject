@@ -87,7 +87,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         values.put(ITEM_ID_KEY, shopItem.getName());
         values.put(ITEM_NAME, shopItem.getName());
         values.put(LIST_KEY, uniqueID);
-        values.put(COLLECTED_KEY, shopItem.getCollected());
+        values.put(COLLECTED_KEY, shopItem.isCollected());
         values.put(KEY_DATE, shopItem.getAddedDate());
 
         db.insert(TABLE_ITEMS, null, values);
@@ -116,7 +116,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         values.put(ITEM_ID_KEY, shopItem.getUniqueID());
         values.put(ITEM_NAME, shopItem.getName());
         values.put(LIST_KEY, list_key);
-        values.put(COLLECTED_KEY, shopItem.getCollected());
+        values.put(COLLECTED_KEY, shopItem.isCollected());
         values.put(DATE_KEY, shopItem.getAddedDate());
 
         return db.update(TABLE_ITEMS, values, ITEM_ID_KEY + " = ?",
