@@ -26,7 +26,8 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
     }
 
     public void onStartShopping(Shopper shopper) {
-        orderList(shopper.getActiveList(), shopper.getNearestItem());
+        // TODO: remove? order list when location updated which for now always happens on start shopping...
+//        orderList(shopper.getActiveList(), shopper.getNearestItem());
     }
     public void onStopShopping(Shopper shopper) {
     }

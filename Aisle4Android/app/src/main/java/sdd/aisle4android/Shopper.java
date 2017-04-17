@@ -64,6 +64,9 @@ class Shopper implements ShopList.IEarItemCollected {
 
         shopStartTimeMs = SystemClock.elapsedRealtime();
         eventStartShopping.fire(this);
+
+        nearestItem = null;
+        eventLocationUpdated.fire(this, nearestItem);
     }
     void endShopping() {
         isShopping = false;
