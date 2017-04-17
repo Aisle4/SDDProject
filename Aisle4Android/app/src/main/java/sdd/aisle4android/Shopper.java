@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Robert Wild on 29/03/2017.
  */
 
-class Shopper {
+class Shopper implements ShopList.IEarItemCollected {
     EventStartShopping eventStartShopping = new EventStartShopping();
     EventStopShopping eventStopShopping = new EventStopShopping();
     EventLocationUpdated eventLocationUpdated = new EventLocationUpdated(); // TODO: fire this event on item collected
@@ -24,8 +24,11 @@ class Shopper {
 
     Shopper(Context context) {
         this.context = context;
+
+        // Load local data
         LocalDatabaseHelper db = new LocalDatabaseHelper(this.context);
         shopLists = db.getAllLists();
+
         db.close();
     }
 
@@ -57,12 +60,16 @@ class Shopper {
     void startShopping(ShopList list) {
         isShopping = true;
         activeShopList = list;
+        list.eventItemCollected.attach(this);
+
         shopStartTimeMs = SystemClock.elapsedRealtime();
         eventStartShopping.fire(this);
     }
     void endShopping() {
         isShopping = false;
+        activeShopList.eventItemCollected.dettach(this);
         activeShopList = null;
+
         eventStopShopping.fire(this);
     }
     void addShopList(ShopList list) {
@@ -81,7 +88,17 @@ class Shopper {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.deleteList(shopLists.get(index));
         db.close();
+
+        shopLists.get(index).eventItemCollected.attach(this);
         shopLists.remove(index);
+    }
+
+    @Override
+    public void onItemCollected(ShopItem item) {
+        if (isShopping()) {
+            nearestItem = item;
+            eventLocationUpdated.fire(this, item);
+        }
     }
 
 
