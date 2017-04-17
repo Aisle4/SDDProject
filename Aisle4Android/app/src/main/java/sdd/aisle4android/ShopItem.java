@@ -41,7 +41,7 @@ class ShopItem {
         return name;
     }
     String getUniqueID() { return uniqueID; }
-    Boolean getCollected(){
+    Boolean isCollected(){
         return collected;
     }
     long getAddedDate(){return addedDate;}

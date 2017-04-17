@@ -38,19 +38,29 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
     // TODO: make private - how to unit test? public, move event handling / ordering commencing code to OrdererController?
     void orderList(ShopList list, ShopItem nearestItem) {
         // TODO: use custom sort function instead of comparator to avoid redundant dijkstra's calculations
-        Collections.sort(list.getItems(), new ComparatorItemDist(nearestItem));
+        Collections.sort(list.getItems(), new ItemComparator(nearestItem));
         list.notifyReordered();
     }
 
-    private class ComparatorItemDist implements Comparator<ShopItem> {
+    private class ItemComparator implements Comparator<ShopItem> {
         private ShopItem referenceItem;
 
-        ComparatorItemDist(ShopItem referenceItem) {
+        ItemComparator(ShopItem referenceItem) {
             this.referenceItem = referenceItem;
         }
 
         @Override
         public int compare(ShopItem item1, ShopItem item2) {
+
+            // Collected items at bottom of list (always greater)
+            if (item1.isCollected()) {
+                return item2.isCollected() ? 0 : 1;
+            }
+            else if (item2.isCollected()) {
+                return -1;
+            }
+
+            // Compare proximity to referenceItem
             return java.lang.Long.compare(
                     graph.minDist(item1, referenceItem),
                     graph.minDist(item2, referenceItem));

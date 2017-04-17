@@ -39,7 +39,7 @@ class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
 
         itemName.setText(shopitem.getName());
 
-        if(shopitem.getCollected()){
+        if(shopitem.isCollected()){
             itemName.setPaintFlags(itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             itemName.setTextColor(Color.parseColor("#999999"));
         }
