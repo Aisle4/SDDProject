@@ -58,6 +58,11 @@ class DatabaseManager extends AsyncTask {
     }
 
     // PUBLIC MODIFIERS
+
+    public List<ItemToItemData> getData() {
+
+    }
+
     public void addItemQueue(String name){
         Object queueCommand[] = {NEW_ITEM_COMMAND, name};
         commandQueue.add(queueCommand);

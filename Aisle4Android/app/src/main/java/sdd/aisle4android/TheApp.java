@@ -6,6 +6,7 @@ import android.database.Observable;
 import android.os.SystemClock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class TheApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
 
         // TEST DATA---
         List<ItemToItemData> testData = new ArrayList<>();
