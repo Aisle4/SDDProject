@@ -21,7 +21,7 @@ import android.graphics.Paint;
 
 
 public class ListActivity extends AppCompatActivity
-        implements AddItemDialog.Listener, RenameListDialog.Listener {
+        implements AddItemDialog.Listener, RenameListDialog.Listener, ShopList.IEarOrderChanged {
     private TheApp app;
     private Shopper shopper;
     private ShopList shopList;
@@ -136,11 +136,14 @@ public class ListActivity extends AppCompatActivity
 
         return true;
     }
-
     @Override
     public void onRenameListDialogConfirm(String listName, int index) {
         shopList.rename(listName);
         updateToolbarTitle();
+    }
+    @Override
+    public void onOrderChanged(ShopList list) {
+        listArrayAdapter.notifyDataSetChanged();
     }
 
 
@@ -153,7 +156,7 @@ public class ListActivity extends AppCompatActivity
         app = (TheApp)getApplicationContext();
         shopper = app.getShopper();
 
-        // Get list title from HomeActivity
+        // Get list index from HomeActivity
         Intent intent = getIntent();
         int listIndex = intent.getIntExtra(HomeActivity.MSG_LIST_INDEX, -1);
         if (listIndex < 0 || listIndex > shopper.getShopLists().size()) {
@@ -161,6 +164,9 @@ public class ListActivity extends AppCompatActivity
             Log.e("error", "Invalid ShopList index on ListActivity Create");
         }
         shopList = shopper.getShopList(listIndex);
+
+        // ShopList events
+        shopList.eventOrderChanged.attach(this);
 
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);

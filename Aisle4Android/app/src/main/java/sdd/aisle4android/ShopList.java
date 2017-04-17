@@ -17,6 +17,7 @@ import java.util.UUID;
 // TODO: implement method stubs
 class ShopList implements ShopItem.IEventListener {
     EventItemCollected eventItemCollected = new EventItemCollected();
+    EventOrderChanged eventOrderChanged = new EventOrderChanged();
 
     private String name;
     private Long created;
@@ -132,9 +133,9 @@ class ShopList implements ShopItem.IEventListener {
         items.remove(index);
         dbDeleteItem(items.get(index));
     }
-    void reorder(List<ShopItem> newItemsList) {
-        // TODO: better way to do this...
-
+    void notifyReordered() {
+        // TODO: prevent sorting of list outside of this class... and order in place here somehow...?
+        eventOrderChanged.fire(this);
     }
 
 
@@ -200,13 +201,13 @@ class ShopList implements ShopItem.IEventListener {
         void onItemCollected(ShopItem item);
     }
     class EventOrderChanged extends Event<IEarOrderChanged> {
-        void fire(ShopItem item) {
+        void fire(ShopList list) {
             for (IEarOrderChanged listener : listeners) {
-                listener.onOrderChanged(item);
+                listener.onOrderChanged(list);
             }
         }
     }
     interface IEarOrderChanged {
-        void onOrderChanged(ShopItem item);
+        void onOrderChanged(ShopList list);
     }
 }
