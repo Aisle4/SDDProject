@@ -21,6 +21,9 @@
     <string name="delete_item">Delete Item</string>
     <string name="uncheck_item">Uncheck Item</string>
     <string name="rename_list">Rename List</string>
+    <string name="list_sort_by_name">Sort by Name</string>
+    <string name="list_sort_by_date">Sort by Date Added</string>
+    <string name="list_uncheck_all">Uncheck All</string>
     <string name="dialog_rename_list_heading">Rename List</string>
     <string name="step_detector">android.hardware.sensor.stepdetector</string>
 

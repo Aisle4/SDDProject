@@ -82,8 +82,8 @@ public class ListActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
 
             case R.id.list_toolbar_rename:
                 openRenameDialog();
@@ -101,6 +101,11 @@ public class ListActivity extends AppCompatActivity
 
             case R.id.list_sort_added:
                 shopList.sortChronological();
+                listArrayAdapter.notifyDataSetChanged();
+                return true;
+
+            case R.id.list_uncheck_all:
+                shopList.unmarkAllItems();
                 listArrayAdapter.notifyDataSetChanged();
                 return true;
 

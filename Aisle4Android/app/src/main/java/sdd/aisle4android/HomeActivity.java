@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.home_toolbar, menu);
         return true;
     }
     @Override
@@ -54,9 +54,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-
+//            case R.id.action_settings:
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

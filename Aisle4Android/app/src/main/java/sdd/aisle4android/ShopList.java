@@ -49,17 +49,6 @@ class ShopList implements ShopItem.IEventListener {
 
     }
 
-    // STATIC FUNCTIONS
-
-    private static Calendar setMidnight(Calendar c) {
-        // TODO: In hindsight this might be useful to reuse and worth moving somewhere else in the code along with getCreationDate
-        // converts the time to midnight of the same day, allowing for comparison
-        c.set(Calendar.HOUR_OF_DAY,0);
-        c.set(Calendar.MINUTE,0);
-        c.set(Calendar.SECOND,0);
-        c.set(Calendar.MILLISECOND,0);
-        return c;
-    }
 
     // PUBLIC ACCESSORS
 
@@ -137,29 +126,38 @@ class ShopList implements ShopItem.IEventListener {
         // TODO: prevent sorting of list outside of this class... and order in place here somehow...?
         eventOrderChanged.fire(this);
     }
+    void unmarkAllItems() {
+        for (ShopItem item : items) {
+            item.setCollected(false);
+        }
+    }
+
+    @Override
+    public void onItemCollected(ShopItem item) {
+        this.eventItemCollected.fire(item);
+    }
 
 
-    // LOCAL DATABASE MODIFIERS
+    // PRIVATE MODIFIERS
 
+    // local Database
     void dbAddItem(ShopItem item) {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.addItem(uniqueID, item);
         db.close();
     }
-
     void dbDeleteItem(ShopItem item) {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.deleteItem(item);
         db.close();
     }
-
     void dbUpdateList() {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.updateList(this);
         db.close();
     }
 
-
+    // Sorting
     void sortAlphabetical(){
         Collections.sort(items, new Comparator<ShopItem>() {
             @Override
@@ -167,8 +165,8 @@ class ShopList implements ShopItem.IEventListener {
                 return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),o2.getName());
             }
         });
+        eventOrderChanged.fire(this);
     }
-
     void sortChronological(){
         Collections.sort(items, new Comparator<ShopItem>() {
             @Override
@@ -182,13 +180,24 @@ class ShopList implements ShopItem.IEventListener {
                 return 0;
             }
         });
+        eventOrderChanged.fire(this);
     }
 
-    @Override
-    public void onItemCollected(ShopItem item) {
-        this.eventItemCollected.fire(item);
+
+    // PRIVATE HELPERS
+
+    private static Calendar setMidnight(Calendar c) {
+        // TODO: In hindsight this might be useful to reuse and worth moving somewhere else in the code along with getCreationDate
+        // converts the time to midnight of the same day, allowing for comparison
+        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+        return c;
     }
 
+
+    // EVENTS
 
     class EventItemCollected extends Event<IEarItemCollected> {
         void fire(ShopItem item) {
