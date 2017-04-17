@@ -192,8 +192,14 @@ public class ListActivity extends AppCompatActivity
         updateToolbarTitle();
         listArrayAdapter.notifyDataSetChanged();
     }
+    @Override
+    protected void onDestroy() {
+        dettachEvents();
+        super.onDestroy();
+    }
 
     private void goToHomeScreen() {
+        dettachEvents();
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
@@ -211,6 +217,9 @@ public class ListActivity extends AppCompatActivity
     }
     private void updateToolbarTitle() {
         toolbar.setTitle(shopList.getName());
+    }
+    private void dettachEvents() {
+        shopList.eventOrderChanged.dettach(this);
     }
 
     private String secondsToString(int pTime) {
