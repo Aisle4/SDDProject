@@ -76,6 +76,12 @@ class ItemGraph {
     private HashMap<String, Node> nodes;
     private Node storeEntrance;
 
+    // weights for computing edge distances based on time and step data
+    static final float DISTANCE_PER_STEP = 0.7f; // 0.7m per step for someone 5"8'
+    static final float STEPS_PER_MILLISECOND = 0.002f; // 120 steps/min
+    static final float DISTANCE_PER_MILLISECOND = STEPS_PER_MILLISECOND * DISTANCE_PER_STEP;
+
+
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
         this.foodNameManager = foodNameMgr;
         nodes = new HashMap<>();
@@ -187,7 +193,8 @@ class ItemGraph {
                 item1.edges.put(item2, ew);
                 item2.edges.put(item1, ew);
             }
-            ew.timeData.add(dat.time);
+            ew.timeData.add(dat.timeMs);
+            ew.stepsData.add(dat.steps);
         }
 
         // Calculate edge weights (item distances)
@@ -195,10 +202,13 @@ class ItemGraph {
             for (EdgeWeight ew : node.edges.values()) {
                 // Average item to item time
                 ew.dist = 0;
-                for (long time : ew.timeData) {
-                    ew.dist += time;
+                for (long ms : ew.timeData) {
+                    ew.dist += ms * DISTANCE_PER_MILLISECOND;
                 }
-                ew.dist /= ew.timeData.size();
+                for (Integer steps : ew.stepsData) {
+                    ew.dist += steps * DISTANCE_PER_STEP;
+                }
+                ew.dist /= (ew.timeData.size() + ew.stepsData.size());
             }
         }
     }
@@ -248,6 +258,7 @@ class ItemGraph {
     private class EdgeWeight {
         long dist = 0;
         List<Long> timeData = new ArrayList<>();
+        List<Integer> stepsData = new ArrayList<>();
     }
 
     /** Sorts based on tmpDist */
