@@ -44,7 +44,7 @@ class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
             itemName.setTextColor(Color.parseColor("#999999"));
         }
         else{
-            itemName.setPaintFlags(0);
+            itemName.setPaintFlags(itemName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
             itemName.setTextColor(Color.parseColor("#000000"));
         }
 
