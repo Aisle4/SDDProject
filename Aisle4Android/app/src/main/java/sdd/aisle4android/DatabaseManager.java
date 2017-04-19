@@ -33,9 +33,9 @@ class DatabaseManager extends AsyncTask {
     private Queue<Object[]> commandQueue;
     private Context context;
 
-    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    //ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    //NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
 
 
@@ -47,11 +47,18 @@ class DatabaseManager extends AsyncTask {
 
 
     public void executeQueue(){
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        if(isConnected) {
+        //boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if(true) {
             for (Object command[] : commandQueue) {
-                this.doInBackground(command);
+                if(((String)command[0]).compareTo(NEW_ITEM_COMMAND)==0){
+                    Log.d("Debug", command[0] + " " + command[1]);
+                    this.execute(command[0], command[1]);
+                }else if(((String)command[1]).compareTo(ITEM_TO_ITEM_MANUAL_COMMAND)==0){
+                    Log.d("Debug", command[0] + " " + command[1] + " " + command[2] + " " + command[3] + " " + command[4]);
+                    this.execute(command[0], command[1], command[2], command[3], command[4]);
+                }
             }
+            commandQueue.clear();
         }else{
             Log.d("Debug", "Queue could not execute due to not having a connection");
         }
@@ -60,13 +67,17 @@ class DatabaseManager extends AsyncTask {
     // PUBLIC MODIFIERS
 
     public void addItemQueue(String name){
+        Log.d("Debug", "Adding item " + name);
         Object queueCommand[] = {NEW_ITEM_COMMAND, name};
         commandQueue.add(queueCommand);
+        executeQueue();
     }
 
     public void addItemToItemQueue(int item1ID, int item2ID, int steps, int travel_time){
+        Log.d("Debug", "Adding item to item relation");
         Object queueCommand[] = {ITEM_TO_ITEM_MANUAL_COMMAND, item1ID, item2ID, steps, travel_time};
         commandQueue.add(queueCommand);
+        executeQueue();
     }
 
     private void asyncAddItem(String name){
@@ -78,7 +89,7 @@ class DatabaseManager extends AsyncTask {
     }
 
     private String addItem(String name) throws IOException {
-        //Log.d("DEBUG", "Add item launched");
+        Log.d("Debug", "Add item launched");
 
         String command = NEW_ITEM_COMMAND;
         URL url = new URL(baseLink);
@@ -93,7 +104,7 @@ class DatabaseManager extends AsyncTask {
         OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
         writer.write(data);
         writer.flush();
-        //Log.d("DEBUG", "Request has been sent");
+        Log.d("Debug", "Request has been sent");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -101,17 +112,17 @@ class DatabaseManager extends AsyncTask {
         String responseLine;
 
         while((responseLine = reader.readLine()) != null){
-            //Log.d("DEBUG", "Response has been received");
+            Log.d("Debug", "Response has been received");
             builder.append(responseLine);
             break;
         }
 
-        //Log.d("DEBUG", builder.toString());
+        Log.d("Debug", builder.toString());
         return builder.toString();
 
     }
     private String addItemToItem(int item1ID, int item2ID, int steps, int travel_time) throws IOException {
-        //Log.d("DEBUG", "Add Item to Item launched");
+        Log.d("Debug", "Add Item to Item launched");
 
         String command = ITEM_TO_ITEM_MANUAL_COMMAND;
         URL url = new URL(baseLink);
@@ -132,7 +143,7 @@ class DatabaseManager extends AsyncTask {
         OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
         writer.write(data);
         writer.flush();
-        //Log.d("DEBUG", "Request has been sent");
+        Log.d("Debug", "Request has been sent");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -140,12 +151,12 @@ class DatabaseManager extends AsyncTask {
         String responseLine;
 
         while((responseLine = reader.readLine()) != null){
-            //Log.d("DEBUG", "Response has been received");
+            Log.d("Debug", "Response has been received");
             builder.append(responseLine);
             break;
         }
 
-        //Log.d("DEBUG", builder.toString());
+        Log.d("Debug", builder.toString());
         return builder.toString();
 
     }
@@ -155,11 +166,11 @@ class DatabaseManager extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] params) {
-        //Log.d("DEBUG", "Thread Launched");
+        Log.d("Debug", "Thread Launched");
         String command = (String)params[0];
 
         if(command.compareTo(NEW_ITEM_COMMAND)==0 && params[1]!=null){
-            //Log.d("DEBUG", "New Item command reached");
+            Log.d("Debug", "New Item command reached");
             String itemName = (String)params[1];
             try {
                 addItem(itemName);
@@ -170,7 +181,7 @@ class DatabaseManager extends AsyncTask {
         }
 
         if(command.compareTo(ITEM_TO_ITEM_MANUAL_COMMAND)==0 && params[1]!=null && params[2]!=null && params[3]!=null && params[4]!=null){
-            //Log.d("DEBUG", "New Item_to_Item command reached");
+            Log.d("Debug", "New Item_to_Item command reached");
             int item1ID = (int)params[1];
             int item2ID = (int)params[2];
             int steps = (int)params[3];

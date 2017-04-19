@@ -50,7 +50,8 @@ public class TheApp extends Application {
         testData.add(new ItemToItemData(pasta, rice, 10, 10));
         //-------------
 
-        //database = new DatabaseManager(this);
+        database = new DatabaseManager(this);
+        database.addItemQueue("UnitTest");
         foodNameManager = new FoodNameManager();
         shopper = new Shopper(this);
         dataCollector = new DataCollector(this);
