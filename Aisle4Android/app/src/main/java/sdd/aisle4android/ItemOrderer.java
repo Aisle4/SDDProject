@@ -76,10 +76,13 @@ class ItemGraph {
     private HashMap<String, Node> nodes;
     private Node storeEntrance;
 
-    // weights for computing edge distances based on time and step data
-    static final float DISTANCE_PER_STEP = 0.7f; // 0.7m per step for someone 5"8'
+    // Weights for computing edge distances based on time and step data
     static final float STEPS_PER_MILLISECOND = 0.002f; // 120 steps/min
-    static final float DISTANCE_PER_MILLISECOND = STEPS_PER_MILLISECOND * DISTANCE_PER_STEP;
+    private static final float DISTANCE_PER_STEP = 0.7f; // 0.7m per step for someone 5"8'
+    private static final float DISTANCE_PER_MILLISECOND = STEPS_PER_MILLISECOND * DISTANCE_PER_STEP;
+
+    // Edge weight for item-category edges (paths that rely only on recorded data should be preferred)
+    private static final float DISTANCE_CATEGORY_NODE = 10 * DISTANCE_PER_STEP;
 
 
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
@@ -235,7 +238,7 @@ class ItemGraph {
                 EdgeWeight ew = categoryNode.edges.get(node);
                 if (ew == null) {
                     ew = new EdgeWeight();
-                    ew.dist = 0;
+                    ew.dist = (long)DISTANCE_CATEGORY_NODE;
                     categoryNode.edges.put(node, ew);
                     node.edges.put(categoryNode, ew);
                 }
