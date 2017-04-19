@@ -61,7 +61,7 @@ public class GeneralUnitTests {
         String butter = "Butter";
         String pasta = "Pasta";
         String rice = "Rice";
-        testData.add(new ItemToItemData(null, apple, 10, 10));
+        testData.add(new ItemToItemData("", apple, 10, 10));
         testData.add(new ItemToItemData(apple, mango, 10, 10));
         testData.add(new ItemToItemData(mango, carrot, 10, 10));
         testData.add(new ItemToItemData(carrot, pepper, 10, 10));
@@ -73,8 +73,9 @@ public class GeneralUnitTests {
 
         FoodNameManager foodNameManager = new FoodNameManager();
         ItemGraph graph = new ItemGraph(testData, foodNameManager);
-        assertTrue(graph.minDist(apple, null) == graph.minDist(null, apple));
-        assertTrue(graph.minDist(null, apple) < graph.minDist(null, mango));
+        assertTrue(graph.minDist(apple, "") == graph.minDist("", apple));
+        assertTrue(graph.minDist("", apple) < graph.minDist("", milk));
         assertTrue(graph.minDist(apple, pepper) < graph.minDist(milk, pasta));
+        assertTrue(graph.minDist(carrot, apple) == 0);
     }
 }

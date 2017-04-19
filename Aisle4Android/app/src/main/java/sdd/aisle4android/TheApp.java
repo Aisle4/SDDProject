@@ -33,6 +33,7 @@ public class TheApp extends Application {
         String apple = "Apple";
         String mango = "Mango";
         String carrot = "Carrot";
+        String potato = "Potato";
         String pepper = "Pepper";
         String milk = "Milk";
         String eggs = "Eggs";

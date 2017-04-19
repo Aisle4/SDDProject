@@ -9,21 +9,25 @@ import java.util.Map;
 
 public class FoodNameManager {
 
+    // (name, category) pairs
     private Map<String, String> nameCategoryMap = new HashMap<String, String>();
 
     FoodNameManager() {
-        // read from file
+        // read from file -- set everything to lowercase
+
+        nameCategoryMap.put("carrot", "produce");
+        nameCategoryMap.put("apple", "produce");
+        nameCategoryMap.put("mango", "produce");
+        nameCategoryMap.put("potato", "produce");
     }
 
-    public String[] getFoodNames() {
-//        return nameCategoryMap.keySet();
-        return null;
+    String[] getFoodNames() {
+        return nameCategoryMap.keySet().toArray(new String[nameCategoryMap.size()]);
     }
-    public String[] getCategories() {
-//        return nameCategoryMap.keySet().toArray();
-        return null;
+    String[] getCategories() {
+        return nameCategoryMap.values().toArray(new String[nameCategoryMap.size()]);
     }
-    public String getCategory(String itemName) {
-        return null;
+    String getCategory(String itemName) {
+        return nameCategoryMap.get(itemName.toLowerCase());
     }
 }

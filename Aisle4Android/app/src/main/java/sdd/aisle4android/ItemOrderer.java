@@ -1,6 +1,7 @@
 package sdd.aisle4android;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -71,10 +72,12 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
 
 
 class ItemGraph {
-    HashMap<String, Node> nodes;
-    Node storeEntrance;
+    private FoodNameManager foodNameManager;
+    private HashMap<String, Node> nodes;
+    private Node storeEntrance;
 
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
+        this.foodNameManager = foodNameMgr;
         nodes = new HashMap<>();
         storeEntrance = new Node("");
         nodes.put(storeEntrance.itemName, storeEntrance);
@@ -105,9 +108,17 @@ class ItemGraph {
         // Resolve item name and data
         Node item1Node = nodes.get(item1Name.toLowerCase());
         Node item2Node = nodes.get(item2Name.toLowerCase());
-        if (item1Node == null || item2Node == null) {
-            // No relevant data
-            return Long.MAX_VALUE;
+
+        // Use general food category as starting node in graph if no data for a specific item
+        if (item1Node == null) {
+            String category = foodNameManager.getCategory(item1Name.toLowerCase());
+            item1Node = nodes.get(category.toLowerCase());
+            if (item1Node == null) return Long.MAX_VALUE; // No category data or category not in graph
+        }
+        if (item2Node == null) {
+            String category = foodNameManager.getCategory(item2Name.toLowerCase());
+            item2Node = nodes.get(category.toLowerCase());
+            if (item2Node == null) return Long.MAX_VALUE; // No category data or category not in graph
         }
 
         // Dijkstra Initialization
@@ -120,8 +131,6 @@ class ItemGraph {
         }
         item1Node.tmpDist = 0;
         Collections.sort(q, new ComparatorTmpDist());
-//        boolean ret = q.remove(item1Node);
-//        q.add(item1Node);
 
         // Main
         while (q.size() > 0) {
@@ -140,8 +149,6 @@ class ItemGraph {
                     if (altDist < neighbor.tmpDist) {
                         neighbor.tmpDist = altDist;
                         Collections.sort(q, new ComparatorTmpDist());
-//                        q.remove(neighbor);
-//                        q.add(neighbor);
                     }
                 }
             }
@@ -201,7 +208,9 @@ class ItemGraph {
      * @param foodNameMgr
      */
     private void extendWithCategoryData(FoodNameManager foodNameMgr) {
-        for (Node node : nodes.values()) {
+        List<Node> itemNodes = new ArrayList<>(nodes.values());
+
+        for (Node node : itemNodes) {
             String category = foodNameMgr.getCategory(node.itemName);
             if (category != null) {
                 Node categoryNode = nodes.get(category);
@@ -216,6 +225,7 @@ class ItemGraph {
                 EdgeWeight ew = categoryNode.edges.get(node);
                 if (ew == null) {
                     ew = new EdgeWeight();
+                    ew.dist = 0;
                     categoryNode.edges.put(node, ew);
                     node.edges.put(categoryNode, ew);
                 }
