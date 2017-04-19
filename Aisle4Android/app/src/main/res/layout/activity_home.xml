@@ -53,16 +53,5 @@
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:background="#FFFFFF" />
-        <Button
-            android:id="@+id/home_btn_pin"
-            android:onClick="onClickBtnPin"
-            android:text="@string/btn_pin"
-            android:textSize="17sp"
-            android:textColor="#FFFFFF"
-            android:background="@color/colorPrimary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
     </LinearLayout>
 </RelativeLayout>
