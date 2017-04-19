@@ -19,7 +19,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     private ShopList listInUse;
     private ShopItem lastItem = null;
     private List<ItemToItemData> data = new ArrayList<ItemToItemData>();
-
+    private DatabaseManager database;
     // Time
     private long lastCollectTime = 0;
 
@@ -31,6 +31,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
 
     DataCollector(TheApp app) {
         Shopper shopper = app.getShopper();
+        database = app.getDatabaseManager();
 
         shopper.eventStartShopping.attach(this);
         shopper.eventStopShopping.attach(this);
@@ -77,6 +78,11 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
 
         long time = System.currentTimeMillis() - lastCollectTime;
         data.add(new ItemToItemData(lastItem, item, time, stepsSinceLast));
+        database.addItemQueue(item.getName());
+        if(lastItem != null && item != null) {
+            database.addItemToItemQueue(lastItem.getName(), item.getName(), stepsSinceLast, (int)time);
+        }
+        Log.d("Debug", "Item to item was been sent to remote database");
 
         Log.d("debug", "Saved item to item data: ");
         if (lastItem == null) {

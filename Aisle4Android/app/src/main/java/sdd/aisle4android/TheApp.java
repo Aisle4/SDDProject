@@ -51,12 +51,15 @@ public class TheApp extends Application {
         //-------------
 
         database = new DatabaseManager(this);
-        database.addItemQueue("UnitTest");
+        //database.addItemQueue("UnitTest");
+        //database.addItemToItemQueue("test", "UnitTest", 10, 10000);
         foodNameManager = new FoodNameManager();
         shopper = new Shopper(this);
         dataCollector = new DataCollector(this);
         itemOrderer = new ItemOrderer(shopper, null, testData, foodNameManager);
     }
+
+    public DatabaseManager getDatabaseManager(){return database;}
 
     public Shopper getShopper() {
         return shopper;
