@@ -67,7 +67,7 @@ public class AddItemDialog extends DialogFragment {
             posBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String itemName = editText.getText().toString();
+                    String itemName = editText.getText().toString().trim();
                     Listener listener = (Listener)getActivity();
                     listener.onAddItemDialogConfirm(itemName);
                     editText.setText("");

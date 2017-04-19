@@ -1,6 +1,7 @@
 package sdd.aisle4android;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -71,10 +72,21 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
 
 
 class ItemGraph {
-    HashMap<String, Node> nodes;
-    Node storeEntrance;
+    private FoodNameManager foodNameManager;
+    private HashMap<String, Node> nodes;
+    private Node storeEntrance;
+
+    // Weights for computing edge distances based on time and step data
+    static final float STEPS_PER_MILLISECOND = 0.002f; // 120 steps/min
+    private static final float DISTANCE_PER_STEP = 0.7f; // 0.7m per step for someone 5"8'
+    private static final float DISTANCE_PER_MILLISECOND = STEPS_PER_MILLISECOND * DISTANCE_PER_STEP;
+
+    // Edge weight for item-category edges (paths that rely only on recorded data should be preferred)
+    private static final float DISTANCE_CATEGORY_NODE = 10 * DISTANCE_PER_STEP;
+
 
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
+        this.foodNameManager = foodNameMgr;
         nodes = new HashMap<>();
         storeEntrance = new Node("");
         nodes.put(storeEntrance.itemName, storeEntrance);
@@ -105,9 +117,17 @@ class ItemGraph {
         // Resolve item name and data
         Node item1Node = nodes.get(item1Name.toLowerCase());
         Node item2Node = nodes.get(item2Name.toLowerCase());
-        if (item1Node == null || item2Node == null) {
-            // No relevant data
-            return Long.MAX_VALUE;
+
+        // Use general food category as starting node in graph if no data for a specific item
+        if (item1Node == null) {
+            String category = foodNameManager.getCategory(item1Name.toLowerCase());
+            item1Node = nodes.get(category.toLowerCase());
+            if (item1Node == null) return Long.MAX_VALUE; // No category data or category not in graph
+        }
+        if (item2Node == null) {
+            String category = foodNameManager.getCategory(item2Name.toLowerCase());
+            item2Node = nodes.get(category.toLowerCase());
+            if (item2Node == null) return Long.MAX_VALUE; // No category data or category not in graph
         }
 
         // Dijkstra Initialization
@@ -120,8 +140,6 @@ class ItemGraph {
         }
         item1Node.tmpDist = 0;
         Collections.sort(q, new ComparatorTmpDist());
-//        boolean ret = q.remove(item1Node);
-//        q.add(item1Node);
 
         // Main
         while (q.size() > 0) {
@@ -140,8 +158,6 @@ class ItemGraph {
                     if (altDist < neighbor.tmpDist) {
                         neighbor.tmpDist = altDist;
                         Collections.sort(q, new ComparatorTmpDist());
-//                        q.remove(neighbor);
-//                        q.add(neighbor);
                     }
                 }
             }
@@ -180,7 +196,8 @@ class ItemGraph {
                 item1.edges.put(item2, ew);
                 item2.edges.put(item1, ew);
             }
-            ew.timeData.add(dat.time);
+            ew.timeData.add(dat.timeMs);
+            ew.stepsData.add(dat.steps);
         }
 
         // Calculate edge weights (item distances)
@@ -188,10 +205,13 @@ class ItemGraph {
             for (EdgeWeight ew : node.edges.values()) {
                 // Average item to item time
                 ew.dist = 0;
-                for (long time : ew.timeData) {
-                    ew.dist += time;
+                for (long ms : ew.timeData) {
+                    ew.dist += ms * DISTANCE_PER_MILLISECOND;
                 }
-                ew.dist /= ew.timeData.size();
+                for (Integer steps : ew.stepsData) {
+                    ew.dist += steps * DISTANCE_PER_STEP;
+                }
+                ew.dist /= (ew.timeData.size() + ew.stepsData.size());
             }
         }
     }
@@ -201,7 +221,9 @@ class ItemGraph {
      * @param foodNameMgr
      */
     private void extendWithCategoryData(FoodNameManager foodNameMgr) {
-        for (Node node : nodes.values()) {
+        List<Node> itemNodes = new ArrayList<>(nodes.values());
+
+        for (Node node : itemNodes) {
             String category = foodNameMgr.getCategory(node.itemName);
             if (category != null) {
                 Node categoryNode = nodes.get(category);
@@ -216,6 +238,7 @@ class ItemGraph {
                 EdgeWeight ew = categoryNode.edges.get(node);
                 if (ew == null) {
                     ew = new EdgeWeight();
+                    ew.dist = (long)DISTANCE_CATEGORY_NODE;
                     categoryNode.edges.put(node, ew);
                     node.edges.put(categoryNode, ew);
                 }
@@ -238,6 +261,7 @@ class ItemGraph {
     private class EdgeWeight {
         long dist = 0;
         List<Long> timeData = new ArrayList<>();
+        List<Integer> stepsData = new ArrayList<>();
     }
 
     /** Sorts based on tmpDist */
