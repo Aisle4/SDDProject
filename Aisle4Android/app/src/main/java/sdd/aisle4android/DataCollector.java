@@ -82,6 +82,9 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
         if(lastItem != null && item != null) {
             database.addItemToItemQueue(lastItem.getName(), item.getName(), stepsSinceLast, (int)time);
         }
+        if(lastItem == null){
+            database.addItemToItemQueue("", item.getName(), stepsSinceLast, (int)time);
+        }
         Log.d("Debug", "Item to item was been sent to remote database");
 
         Log.d("debug", "Saved item to item data: ");
