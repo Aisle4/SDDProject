@@ -17,8 +17,9 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
 
     private ItemGraph graph;
 
-    public ItemOrderer(Shopper shopper, DatabaseManager dbManager, List<ItemToItemData> data) {
-        graph = new ItemGraph(data);
+    public ItemOrderer(Shopper shopper, DatabaseManager dbManager, List<ItemToItemData> data,
+                       FoodNameManager foodNameMgr) {
+        graph = new ItemGraph(data, foodNameMgr);
 
         shopper.eventStartShopping.attach(this);
         shopper.eventStopShopping.attach(this);
@@ -73,56 +74,39 @@ class ItemGraph {
     HashMap<String, Node> nodes;
     Node storeEntrance;
 
-    ItemGraph(List<ItemToItemData> data) {
+    ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
         nodes = new HashMap<>();
-        storeEntrance = new Node(null);
+        storeEntrance = new Node("");
         nodes.put(storeEntrance.itemName, storeEntrance);
 
-        // Construct nodes and edges
-        for (ItemToItemData dat : data) {
-            // Nodes
-            String name1 = dat.item1Name == null ? null : dat.item1Name.toLowerCase();
-            String name2 = dat.item2Name == null ? null : dat.item2Name.toLowerCase();
-            Node item1 = nodes.get(name1);
-            Node item2 = nodes.get(name2);
-
-            if (item1 == null) {
-                item1 = new Node(name1);
-                nodes.put(name1, item1);
-            }
-            if (item2 == null) {
-                item2 = new Node(name2);
-                nodes.put(name2, item2);
-            }
-
-            // Edge
-            EdgeWeight ew = item1.edges.get(item2);
-            if (ew == null) {
-                ew = new EdgeWeight();
-                item1.edges.put(item2, ew);
-                item2.edges.put(item1, ew);
-            }
-            ew.timeData.add(dat.time);
-        }
-
-        // Calculate edge weights (item distances)
-        for (Node node : nodes.values()) {
-            for (EdgeWeight ew : node.edges.values()) {
-                // Average item to item time
-                ew.dist = 0;
-                for (long time : ew.timeData) {
-                    ew.dist += time;
-                }
-                ew.dist /= ew.timeData.size();
-            }
-        }
+        populateFromData(data);
+        if (foodNameMgr != null)
+            extendWithCategoryData(foodNameMgr);
     }
+
+    /**
+     * Store entrance should be denoted by null
+     * @param item1
+     * @param item2
+     * @return
+     */
     long minDist(ShopItem item1, ShopItem item2) {
+        return minDist(item1 == null ? "" : item1.getName(),
+                       item2 == null ? "" : item2.getName());
+    }
+
+    /**
+     * Store entrance should be denoted with an empty item name ("").
+     * @param item1Name
+     * @param item2Name
+     * @return
+     */
+    long minDist(String item1Name, String item2Name) {
         // Resolve item name and data
-        Node item1Node = nodes.get(item1 == null ? null : item1.getName().toLowerCase());
-        Node item2Node = nodes.get(item2 == null ? null : item2.getName().toLowerCase());
+        Node item1Node = nodes.get(item1Name.toLowerCase());
+        Node item2Node = nodes.get(item2Name.toLowerCase());
         if (item1Node == null || item2Node == null) {
-            // No relevent data
+            // No relevant data
             return Long.MAX_VALUE;
         }
 
@@ -166,6 +150,79 @@ class ItemGraph {
         return item2Node.tmpDist;
     }
 
+    /**
+     * Add nodes to graph corresponding to items found in ItemToItemData instances
+     * Requires: nodes has been instantiated
+     * @param data
+     */
+    private void populateFromData(List<ItemToItemData> data) {
+        // Construct nodes and edges
+        for (ItemToItemData dat : data) {
+            // Nodes
+            String name1 = dat.item1Name == null ? null : dat.item1Name.toLowerCase();
+            String name2 = dat.item2Name == null ? null : dat.item2Name.toLowerCase();
+            Node item1 = nodes.get(name1);
+            Node item2 = nodes.get(name2);
+
+            if (item1 == null) {
+                item1 = new Node(name1);
+                nodes.put(name1, item1);
+            }
+            if (item2 == null) {
+                item2 = new Node(name2);
+                nodes.put(name2, item2);
+            }
+
+            // Edge
+            EdgeWeight ew = item1.edges.get(item2);
+            if (ew == null) {
+                ew = new EdgeWeight();
+                item1.edges.put(item2, ew);
+                item2.edges.put(item1, ew);
+            }
+            ew.timeData.add(dat.time);
+        }
+
+        // Calculate edge weights (item distances)
+        for (Node node : nodes.values()) {
+            for (EdgeWeight ew : node.edges.values()) {
+                // Average item to item time
+                ew.dist = 0;
+                for (long time : ew.timeData) {
+                    ew.dist += time;
+                }
+                ew.dist /= ew.timeData.size();
+            }
+        }
+    }
+
+    /**
+     * Add nodes for general food categories with edges to specific food items already in the graph
+     * @param foodNameMgr
+     */
+    private void extendWithCategoryData(FoodNameManager foodNameMgr) {
+        for (Node node : nodes.values()) {
+            String category = foodNameMgr.getCategory(node.itemName);
+            if (category != null) {
+                Node categoryNode = nodes.get(category);
+
+                // Create category node if not already created
+                if (categoryNode == null) {
+                    categoryNode = new Node(category);
+                    nodes.put(category, categoryNode);
+                }
+
+                // Create Edge if not already created
+                EdgeWeight ew = categoryNode.edges.get(node);
+                if (ew == null) {
+                    ew = new EdgeWeight();
+                    categoryNode.edges.put(node, ew);
+                    node.edges.put(categoryNode, ew);
+                }
+            }
+        }
+    }
+
     private class Node {
         String itemName;
         HashMap<Node, EdgeWeight> edges;
@@ -182,6 +239,7 @@ class ItemGraph {
         long dist = 0;
         List<Long> timeData = new ArrayList<>();
     }
+
     /** Sorts based on tmpDist */
     private class ComparatorTmpDist implements Comparator<Node> {
         @Override

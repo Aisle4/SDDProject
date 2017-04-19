@@ -15,10 +15,13 @@ import java.util.List;
 
 
 public class TheApp extends Application {
+
+    // Single instance classes (not true Singletons) are stored in the Application singleton
     private Shopper shopper;
     private DatabaseManager database;
     private DataCollector dataCollector;
     private ItemOrderer itemOrderer;
+    private FoodNameManager foodNameManager;
 
     @Override
     public void onCreate() {
@@ -36,7 +39,7 @@ public class TheApp extends Application {
         String butter = "Butter";
         String pasta = "Pasta";
         String rice = "Rice";
-        testData.add(new ItemToItemData(null, apple, 10, 10));
+        testData.add(new ItemToItemData("", apple, 10, 10));
         testData.add(new ItemToItemData(apple, mango, 10, 10));
         testData.add(new ItemToItemData(mango, carrot, 10, 10));
         testData.add(new ItemToItemData(carrot, pepper, 10, 10));
@@ -47,10 +50,11 @@ public class TheApp extends Application {
         testData.add(new ItemToItemData(pasta, rice, 10, 10));
         //-------------
 
-        shopper = new Shopper(this);
         //database = new DatabaseManager(this);
+        foodNameManager = new FoodNameManager();
+        shopper = new Shopper(this);
         dataCollector = new DataCollector(this);
-        itemOrderer = new ItemOrderer(shopper, null, testData);
+        itemOrderer = new ItemOrderer(shopper, null, testData, foodNameManager);
     }
 
     public Shopper getShopper() {

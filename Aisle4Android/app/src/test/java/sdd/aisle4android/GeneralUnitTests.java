@@ -42,7 +42,7 @@ public class GeneralUnitTests {
         assertTrue(list.getItem(0) == apple && list.getItem(1) == orange);
 
         // Order
-        ItemOrderer orderer = new ItemOrderer(null, null, data);
+        ItemOrderer orderer = new ItemOrderer(null, null, data, null);
         orderer.orderList(list, null);
 
         // Post conditions
@@ -71,7 +71,8 @@ public class GeneralUnitTests {
         testData.add(new ItemToItemData(butter, pasta, 30, 30));
         testData.add(new ItemToItemData(pasta, rice, 10, 10));
 
-        ItemGraph graph = new ItemGraph(testData);
+        FoodNameManager foodNameManager = new FoodNameManager();
+        ItemGraph graph = new ItemGraph(testData, foodNameManager);
         assertTrue(graph.minDist(apple, null) == graph.minDist(null, apple));
         assertTrue(graph.minDist(null, apple) < graph.minDist(null, mango));
         assertTrue(graph.minDist(apple, pepper) < graph.minDist(milk, pasta));
