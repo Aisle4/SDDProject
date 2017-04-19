@@ -121,12 +121,16 @@ class ItemGraph {
         // Use general food category as starting node in graph if no data for a specific item
         if (item1Node == null) {
             String category = foodNameManager.getCategory(item1Name.toLowerCase());
-            item1Node = nodes.get(category.toLowerCase());
+            if (category != null) {
+                item1Node = nodes.get(category.toLowerCase());
+            }
             if (item1Node == null) return Long.MAX_VALUE; // No category data or category not in graph
         }
         if (item2Node == null) {
             String category = foodNameManager.getCategory(item2Name.toLowerCase());
-            item2Node = nodes.get(category.toLowerCase());
+            if (category != null) {
+                item2Node = nodes.get(category.toLowerCase());
+            }
             if (item2Node == null) return Long.MAX_VALUE; // No category data or category not in graph
         }
 
