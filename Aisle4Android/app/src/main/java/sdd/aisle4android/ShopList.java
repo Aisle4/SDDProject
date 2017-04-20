@@ -15,8 +15,9 @@ import java.util.UUID;
  */
 
 // TODO: implement method stubs
-class ShopList implements ShopItem.IEventListener {
+class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
     EventItemCollected eventItemCollected = new EventItemCollected();
+    EventItemsChanged eventItemsChanged = new EventItemsChanged();
     EventOrderChanged eventOrderChanged = new EventOrderChanged();
 
     private String name;
@@ -108,19 +109,31 @@ class ShopList implements ShopItem.IEventListener {
         dbAddItem(item);
         items.add(item);
         item.eventCollected.attach(this);
+        item.eventStateChanged.attach(this);
+        eventItemsChanged.fire(this);
         return item;
     }
     void addItemFromDB(ShopItem item) {
         items.add(item);
         item.eventCollected.attach(this);
+        item.eventStateChanged.attach(this);
     }
     void removeItem(ShopItem item) {
+        item.eventCollected.dettach(this);
+        item.eventStateChanged.dettach(this);
+
         items.remove(item);
         dbDeleteItem(item);
+        eventItemsChanged.fire(this);
     }
     void removeItem(int index) {
+        ShopItem item = items.get(index);
+        item.eventCollected.dettach(this);
+        item.eventStateChanged.dettach(this);
+
+        dbDeleteItem(item);
         items.remove(index);
-        dbDeleteItem(items.get(index));
+        eventItemsChanged.fire(this);
     }
     void notifyReordered() {
         // TODO: prevent sorting of list outside of this class... and order in place here somehow...?
@@ -135,6 +148,10 @@ class ShopList implements ShopItem.IEventListener {
     @Override
     public void onItemCollected(ShopItem item) {
         this.eventItemCollected.fire(item);
+    }
+    @Override
+    public void onItemStateChanged(ShopItem item) {
+        this.eventItemsChanged.fire(this);
     }
 
 
@@ -208,6 +225,16 @@ class ShopList implements ShopItem.IEventListener {
     }
     interface IEarItemCollected {
         void onItemCollected(ShopItem item);
+    }
+    class EventItemsChanged extends Event<IEarItemsChanged> {
+        void fire(ShopList list) {
+            for (IEarItemsChanged listener : listeners) {
+                listener.onItemsChanged(list);
+            }
+        }
+    }
+    interface IEarItemsChanged {
+        void onItemsChanged(ShopList list);
     }
     class EventOrderChanged extends Event<IEarOrderChanged> {
         void fire(ShopList list) {

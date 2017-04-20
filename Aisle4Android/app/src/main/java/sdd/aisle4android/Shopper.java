@@ -9,10 +9,11 @@ import java.util.List;
  * Created by Robert Wild on 29/03/2017.
  */
 
-class Shopper implements ShopList.IEarItemCollected {
+class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
     EventStartShopping eventStartShopping = new EventStartShopping();
     EventStopShopping eventStopShopping = new EventStopShopping();
-    EventLocationUpdated eventLocationUpdated = new EventLocationUpdated(); // TODO: fire this event on item collected
+    EventLocationUpdated eventLocationUpdated = new EventLocationUpdated();
+    EventShopperListItemsChanged eventListItemsChanged = new EventShopperListItemsChanged();
 
     // Shopper State
     private List<ShopList> shopLists;
@@ -61,6 +62,7 @@ class Shopper implements ShopList.IEarItemCollected {
         isShopping = true;
         activeShopList = list;
         list.eventItemCollected.attach(this);
+        list.eventItemsChanged.attach(this);
 
         shopStartTimeMs = SystemClock.elapsedRealtime();
         eventStartShopping.fire(this);
@@ -71,6 +73,7 @@ class Shopper implements ShopList.IEarItemCollected {
     void endShopping() {
         isShopping = false;
         activeShopList.eventItemCollected.dettach(this);
+        activeShopList.eventItemsChanged.dettach(this);
         activeShopList = null;
 
         eventStopShopping.fire(this);
@@ -103,26 +106,14 @@ class Shopper implements ShopList.IEarItemCollected {
             eventLocationUpdated.fire(this, item);
         }
     }
-
-
-
-    /*void shopListRename(ShopList list, String name) {
-        list.rename(name);
+    @Override
+    public void onItemsChanged(ShopList list) {
+        eventListItemsChanged.fire(this);
     }
-    void addShopItem(ShopList list, ShopItem item) {
-        list.addItem(item);
-    }
-    void removeItem(ShopList list, int position) {
-        ShopItem item = list.getItem(position);
-        list.removeItem(item);
-    }
-    void setCollected(ShopItem item, boolean collected) {
-        item.setCollected(collected);
-    }*/
 
 
+    // EVENTS
 
-    // TODO: Improve event system
     class EventStartShopping extends Event<IEarStartShopping> {
         void fire(Shopper shopper) {
             for (IEarStartShopping listener : listeners) {
@@ -152,5 +143,15 @@ class Shopper implements ShopList.IEarItemCollected {
     }
     interface IEarLocationUpdated {
         void onLocationUpdated(Shopper shopper, ShopItem nearestItem);
+    }
+    class EventShopperListItemsChanged extends Event<IEarListItemsChanged> {
+        void fire(Shopper shopper) {
+            for (IEarListItemsChanged listener : listeners) {
+                listener.onShopperListItemsChanged(shopper);
+            }
+        }
+    }
+    interface IEarListItemsChanged {
+        void onShopperListItemsChanged(Shopper shopper);
     }
 }

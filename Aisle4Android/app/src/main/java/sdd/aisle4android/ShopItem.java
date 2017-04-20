@@ -10,13 +10,13 @@ import java.util.UUID;
 
 class ShopItem {
     EventCollected eventCollected = new EventCollected();
+    EventStateChanged eventStateChanged = new EventStateChanged();
 
     private String name;
     private boolean collected = false;
     private long addedDate;
     private String uniqueID;
     private Context context;
-
 
 
     ShopItem(String name, Context context) {
@@ -65,7 +65,11 @@ class ShopItem {
         if (this.collected) {
             eventCollected.fire(this);
         }
+        eventStateChanged.fire(this);
     }
+
+
+    // EVENTS
 
     class EventCollected extends Event<IEventListener> {
         void fire(ShopItem item) {
@@ -74,8 +78,17 @@ class ShopItem {
             }
         }
     }
-
     interface IEventListener {
         void onItemCollected(ShopItem item);
+    }
+    class EventStateChanged extends Event<IEarStateChanged> {
+        void fire(ShopItem item) {
+            for (IEarStateChanged listener : listeners) {
+                listener.onItemStateChanged(item);
+            }
+        }
+    }
+    interface IEarStateChanged {
+        void onItemStateChanged(ShopItem item);
     }
 }
