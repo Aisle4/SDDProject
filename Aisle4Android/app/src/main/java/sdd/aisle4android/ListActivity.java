@@ -3,6 +3,7 @@ package sdd.aisle4android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,8 @@ import android.widget.ListView;
 
 
 public class ListActivity extends AppCompatActivity
-        implements AddItemDialog.Listener, RenameListDialog.Listener, ShopList.IEarOrderChanged {
+        implements AddItemDialog.Listener, RenameListDialog.Listener, ShopList.IEarOrderChanged,
+        DataCollector.IEarDataRecorded {
     private TheApp app;
     private Shopper shopper;
     private ShopList shopList;
@@ -146,6 +148,11 @@ public class ListActivity extends AppCompatActivity
     public void onOrderChanged(ShopList list) {
         listArrayAdapter.notifyDataSetChanged();
     }
+    @Override
+    public void onDataRecorded(ItemToItemData data) {
+        showDataCollectedMessage(data);
+    }
+
 
 
     // PRIVATE / PROTECTED MODIFIERS
@@ -166,8 +173,9 @@ public class ListActivity extends AppCompatActivity
         }
         shopList = shopper.getShopList(listIndex);
 
-        // ShopList events
+        // Shopping events
         shopList.eventOrderChanged.attach(this);
+        app.getDataCollector().eventDataRecorded.attach(this);
 
         // Toolbar
         toolbar = (Toolbar)findViewById(R.id.list_toolbar);
@@ -219,13 +227,25 @@ public class ListActivity extends AppCompatActivity
     private void updateToolbarTitle() {
         toolbar.setTitle(shopList.getName());
     }
+    private void showDataCollectedMessage(ItemToItemData data) {
+        String seconds = String.valueOf(data.timeMs / 1000);
+        String fromItem = data.item1Name == null || data.item1Name.equals("") ? "entrance" : data.item1Name;
+        String msg = data.steps + " steps   " + seconds + " sec   from " + fromItem;
+
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
+//            .setAction(R.string.snackbar_action, myOnClickListener)
+                .show();
+    }
+
     private void dettachEvents() {
         shopList.eventOrderChanged.dettach(this);
+        app.getDataCollector().eventDataRecorded.dettach(this);
     }
 
     private String secondsToString(int pTime) {
         return String.format("%02d:%02d", pTime / 60, pTime % 60); // TODO: locale
     }
+
 }
 
 

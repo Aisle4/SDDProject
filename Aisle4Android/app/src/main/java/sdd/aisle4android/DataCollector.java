@@ -16,9 +16,11 @@ import java.util.List;
 
 class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
         ShopList.IEarItemCollected, SensorEventListener {
+
+    EventDataRecorded eventDataRecorded = new EventDataRecorded();
+
     private ShopList listInUse;
     private ShopItem lastItem = null;
-    private List<ItemToItemData> data = new ArrayList<ItemToItemData>();
     private DatabaseManager database;
     // Time
     private long lastCollectTime = 0;
@@ -77,31 +79,35 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
         if (item == lastItem) return;
 
         long time = System.currentTimeMillis() - lastCollectTime;
-        data.add(new ItemToItemData(lastItem, item, time, stepsSinceLast));
+        ItemToItemData data = new ItemToItemData(lastItem, item, time, stepsSinceLast);
+
+        // Push to database
         database.addItemQueue(item.getName());
-        if(lastItem != null && item != null) {
-            database.addItemToItemQueue(lastItem.getName(), item.getName(), stepsSinceLast, (int)time);
-        }
-        if(lastItem == null){
-            database.addItemToItemQueue("", item.getName(), stepsSinceLast, (int)time);
-        }
-        Log.d("Debug", "Item to item was been sent to remote database");
+        database.addItemToItemQueue(lastItem == null ? "" : lastItem.getName(), item.getName(), stepsSinceLast, (int)time);
 
-        Log.d("debug", "Saved item to item data: ");
-        if (lastItem == null) {
-            Log.d("debug", "item1: null");
-        }
-        else {
-            Log.d("debug", "item1: " +  lastItem.getName());
-        }
 
-        Log.d("debug", "item2: " + item.getName());
-        Log.d("debug", "time: " + time);
-        Log.d("debug", "steps: " + stepsSinceLast);
+//        Log.d("Debug", "Item to item was been sent to remote database");
+//
+//        Log.d("debug", "Saved item to item data: ");
+//        if (lastItem == null) {
+//            Log.d("debug", "item1: null");
+//        }
+//        else {
+//            Log.d("debug", "item1: " +  lastItem.getName());
+//        }
+//
+//        Log.d("debug", "item2: " + item.getName());
+//        Log.d("debug", "time: " + time);
+//        Log.d("debug", "steps: " + stepsSinceLast);
 
+
+        // Reset for recording next item data
         lastCollectTime = System.currentTimeMillis();
         stepsSinceLast = 0;
         lastItem = item;
+
+        // Event
+        eventDataRecorded.fire(data);
     }
 
     @Override
@@ -115,5 +121,17 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+
+    class EventDataRecorded extends Event<IEarDataRecorded> {
+        void fire(ItemToItemData data) {
+            for (IEarDataRecorded listener : listeners) {
+                listener.onDataRecorded(data);
+            }
+        }
+    }
+    interface IEarDataRecorded {
+        void onDataRecorded(ItemToItemData data);
     }
 }

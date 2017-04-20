@@ -64,7 +64,9 @@ public class TheApp extends Application {
     }
 
     public DatabaseManager getDatabaseManager(){return database;}
-
+    public DataCollector getDataCollector() {
+        return dataCollector;
+    }
     public Shopper getShopper() {
         return shopper;
     }
