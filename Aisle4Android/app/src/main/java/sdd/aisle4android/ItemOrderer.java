@@ -17,9 +17,9 @@ class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsC
 
     private ItemGraph graph;
 
-    public ItemOrderer(Shopper shopper, DatabaseManager dbManager, List<ItemToItemData> data,
+    public ItemOrderer(Shopper shopper, DatabaseManager dbManager,
                        FoodNameManager foodNameMgr) {
-        graph = new ItemGraph(data, foodNameMgr);
+        graph = new ItemGraph(dbManager.getData(), foodNameMgr);
 
         shopper.eventLocationUpdated.attach(this);
         shopper.eventListItemsChanged.attach(this);

@@ -29,39 +29,36 @@ public class TheApp extends Application {
 
 
         // TEST DATA---
-        long shortTime = 10000;
-        int aFewSteps = (int)(ItemGraph.STEPS_PER_MILLISECOND * shortTime);
-
-        List<ItemToItemData> testData = new ArrayList<>();
-        String apple = "Apple";
-        String mango = "Mango";
-        String carrot = "Carrot";
-        String potato = "Potato";
-        String pepper = "Pepper";
-        String milk = "Milk";
-        String eggs = "Eggs";
-        String butter = "Butter";
-        String pasta = "Pasta";
-        String rice = "Rice";
-        testData.add(new ItemToItemData("", apple, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(apple, mango, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(mango, carrot, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(carrot, pepper, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(pepper, milk, shortTime*3, aFewSteps*3));
-        testData.add(new ItemToItemData(milk, eggs, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(eggs, butter, shortTime, aFewSteps));
-        testData.add(new ItemToItemData(butter, pasta, shortTime*3, aFewSteps*3));
-        testData.add(new ItemToItemData(pasta, rice, shortTime, aFewSteps));
+//        long shortTime = 10000;
+//        int aFewSteps = (int)(ItemGraph.STEPS_PER_MILLISECOND * shortTime);
+//
+//        List<ItemToItemData> testData = new ArrayList<>();
+//        String apple = "Apple";
+//        String mango = "Mango";
+//        String carrot = "Carrot";
+//        String potato = "Potato";
+//        String pepper = "Pepper";
+//        String milk = "Milk";
+//        String eggs = "Eggs";
+//        String butter = "Butter";
+//        String pasta = "Pasta";
+//        String rice = "Rice";
+//        testData.add(new ItemToItemData("", apple, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(apple, mango, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(mango, carrot, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(carrot, pepper, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(pepper, milk, shortTime*3, aFewSteps*3));
+//        testData.add(new ItemToItemData(milk, eggs, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(eggs, butter, shortTime, aFewSteps));
+//        testData.add(new ItemToItemData(butter, pasta, shortTime*3, aFewSteps*3));
+//        testData.add(new ItemToItemData(pasta, rice, shortTime, aFewSteps));
         //-------------
 
         database = new DatabaseManager(this);
-        //database.getData();
-        //database.addItemQueue("UnitTest");
-        //database.addItemToItemQueue("test", "UnitTest", 10, 10000);
         foodNameManager = new FoodNameManager();
         shopper = new Shopper(this);
         dataCollector = new DataCollector(this);
-        itemOrderer = new ItemOrderer(shopper, null, testData, foodNameManager);
+        itemOrderer = new ItemOrderer(shopper, database, foodNameManager);
     }
 
     public DatabaseManager getDatabaseManager(){return database;}
