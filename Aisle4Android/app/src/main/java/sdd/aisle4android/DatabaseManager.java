@@ -24,22 +24,23 @@ import android.util.Log;
 
 
 /**
+ * The Database manager is a class responsible for handling all interaction with the database server.
+ * It exposes to users, the ability to add server commands to a queue that users may attempt to have execute.
+ *
  * Created by John on 3/26/2017.
  */
 
 class DatabaseManager {
+    //Public static command strings
     public static final String baseLink = "http://www.carryncare.com/aisle4/server_copy.php" ;
     public static final String ITEM_TO_ITEM_MANUAL_COMMAND = "new_item_to_item";
     public static final String NEW_ITEM_COMMAND = "new_item";
     public static final String SUCCESS_MESSAGE = "Values have been inserted successfully";
     public static final String GET_DATA = "get_data";
 
+    //Private state variables
     private Queue<Object[]> commandQueue;
     private Context context;
-
-    //ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-    //NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
     DatabaseManager(Context context)
     {
@@ -47,9 +48,7 @@ class DatabaseManager {
         commandQueue = new PriorityQueue<>();
     }
 
-
-
-    // PUBLIC ACCESSORS
+    //Public manager controls
 
     /**
      * This is the funtion that can be used to gather all of the item relationships needed to build a pathing graph from the database
@@ -75,9 +74,6 @@ class DatabaseManager {
             return new ArrayList<>();
         }
     }
-
-
-    // PUBLIC MODIFIERS
 
     /**
      * This is the function that is called to execute all commands that are stored in the command queue.
@@ -126,6 +122,8 @@ class DatabaseManager {
         executeQueue();
     }
 
+    //Private helper functions
+
     /**
      * This is the function used to convert the String data taken directly from the database into a list of ItemToItemData objects
      * @param data The string data take directly from the database
@@ -142,6 +140,5 @@ class DatabaseManager {
         }
         return results;
     }
-
 
 }

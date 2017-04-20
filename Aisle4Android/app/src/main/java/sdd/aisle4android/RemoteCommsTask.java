@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class is meant to represent any single command that is sent to the database server.
+ * In addition to this representation, this class execute these commands asynchronously.
  * Created by John on 4/19/2017.
  */
 

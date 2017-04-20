@@ -28,9 +28,7 @@ public class HomeActivity extends AppCompatActivity
         DialogFragment dialog = new NewListDialog();
         dialog.show(getSupportFragmentManager(), "New List"); // TODO: should this tag be in string res?
     }
-    public void onClickBtnPin(View v) {
 
-    }
     public void onClickBtnList(int listIndex) {
         goToListScreen(listIndex);
     }
