@@ -26,6 +26,8 @@
     <string name="list_uncheck_all">Uncheck All</string>
     <string name="dialog_rename_list_heading">Rename List</string>
     <string name="step_detector">android.hardware.sensor.stepdetector</string>
+    <string name="save_data_question">Save item proximity data from this trip?</string>
+    <string name="yes">Yes</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

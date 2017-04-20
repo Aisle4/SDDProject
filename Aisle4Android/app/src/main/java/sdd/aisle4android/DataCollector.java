@@ -22,6 +22,10 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     private ShopList listInUse;
     private ShopItem lastItem = null;
     private DatabaseManager database;
+
+    // Local data for one shopping trip -- pushed to database when shopping is done
+    private List<ItemToItemData> dataQueue;
+
     // Time
     private long lastCollectTime = 0;
 
@@ -38,6 +42,9 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
         shopper.eventStartShopping.attach(this);
         shopper.eventStopShopping.attach(this);
 
+        // Local data -- pushed to the database once shopping is done
+        dataQueue = new ArrayList<>();
+
         // Pedometer
         sensorManager = (SensorManager)app.getSystemService(Application.SENSOR_SERVICE);
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -46,13 +53,22 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
 
     // PUBLIC MODIFIERS
 
+    /**
+     * Allow local shopping trip data to be pushed to the database
+     */
+    public void saveDataToDataBase() {
+        for (ItemToItemData datum : dataQueue) {
+            database.addItemQueue(datum.item2Name);
+            database.addItemToItemQueue(datum.item1Name, datum.item2Name, datum.steps, (int)datum.timeMs);
+        }
+    }
+
     @Override
     public void onStartShopping(Shopper shopper) {
         stepsSinceLast = 0;
         lastCollectTime = System.currentTimeMillis();
         lastItem = null;
-
-        Log.d("debug", "START SHOPPING");
+        dataQueue.clear();
 
         // Events
         listInUse = shopper.getActiveList();
@@ -64,8 +80,6 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     }
     @Override
     public void onStopShopping(Shopper shopper) {
-        Log.d("debug", "STOP SHOPPING");
-
         // Events
         if (listInUse != null) {
             listInUse.eventItemCollected.dettach(this);
@@ -80,26 +94,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
 
         long time = System.currentTimeMillis() - lastCollectTime;
         ItemToItemData data = new ItemToItemData(lastItem, item, time, stepsSinceLast);
-
-        // Push to database
-        database.addItemQueue(item.getName());
-        database.addItemToItemQueue(lastItem == null ? "" : lastItem.getName(), item.getName(), stepsSinceLast, (int)time);
-
-
-//        Log.d("Debug", "Item to item was been sent to remote database");
-//
-//        Log.d("debug", "Saved item to item data: ");
-//        if (lastItem == null) {
-//            Log.d("debug", "item1: null");
-//        }
-//        else {
-//            Log.d("debug", "item1: " +  lastItem.getName());
-//        }
-//
-//        Log.d("debug", "item2: " + item.getName());
-//        Log.d("debug", "time: " + time);
-//        Log.d("debug", "steps: " + stepsSinceLast);
-
+        dataQueue.add(data);
 
         // Reset for recording next item data
         lastCollectTime = System.currentTimeMillis();

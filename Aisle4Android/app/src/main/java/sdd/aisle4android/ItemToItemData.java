@@ -17,8 +17,8 @@ class ItemToItemData {
         this.steps = steps;
     }
     ItemToItemData(ShopItem item1, ShopItem item2, long timeMs, int steps) {
-        this.item1Name = item1 == null ? null : item1.getName();
-        this.item2Name = item2 == null ? null : item2.getName();
+        this.item1Name = item1 == null ? "" : item1.getName();
+        this.item2Name = item2 == null ? "" : item2.getName();
         this.timeMs = timeMs;
         this.steps = steps;
     }

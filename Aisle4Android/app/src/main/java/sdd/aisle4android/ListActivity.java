@@ -53,12 +53,15 @@ public class ListActivity extends AppCompatActivity
         btn.setText(shopper.isShopping() ? R.string.btn_stop_shop : R.string.btn_shop);
 
         if (shopper.isShopping()) {
-            // Update timer every second
-            timerHandler.post(timerUpdater);
+            // Started shopping
+            timerHandler.post(timerUpdater); // Update timer every second
         }
         else {
+            // Ended shopping
             timerHandler.removeCallbacks(timerUpdater);
             toolbar.setTitle(shopList.getName());
+
+            showSaveDataPopup();
         }
     }
     @Override
@@ -232,8 +235,20 @@ public class ListActivity extends AppCompatActivity
         String fromItem = data.item1Name == null || data.item1Name.equals("") ? "entrance" : data.item1Name;
         String msg = data.steps + " steps   " + seconds + " sec   from " + fromItem;
 
-        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
-//            .setAction(R.string.snackbar_action, myOnClickListener)
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
+    }
+    private void showSaveDataPopup() {
+        // Define response
+        View.OnClickListener onYesResponse = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.getDataCollector().saveDataToDataBase();
+            }
+        };
+
+        // Create popup
+        Snackbar.make(findViewById(android.R.id.content), R.string.save_data_question, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.yes, onYesResponse)
                 .show();
     }
 
