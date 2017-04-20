@@ -13,11 +13,16 @@ import java.util.Map;
  * Created by Robert Wild on 05/04/2017.
  */
 
+/**
+ * Handles ordering items by proximity when a shopping list changes during shopping
+ */
 class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsChanged {
 
+    // Graph with item distance estimates for edges
     private ItemGraph graph;
 
-    public ItemOrderer(Shopper shopper, DatabaseManager dbManager,
+
+    ItemOrderer(Shopper shopper, DatabaseManager dbManager,
                        FoodNameManager foodNameMgr) {
         graph = new ItemGraph(dbManager.getData(), foodNameMgr);
 

@@ -14,13 +14,19 @@ import java.util.List;
  * Created by Robert Wild on 26/03/2017.
  */
 
+/**
+ * Handles recording of pedometer and time data as items are collected during shopping.
+ */
 class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
         ShopList.IEarItemCollected, SensorEventListener {
 
-    public static final String STORE_ENTRANCE_NAME = "_enter";
+    // String used instead of an item name for item to item data (item to store entrance)
+    static final String STORE_ENTRANCE_NAME = "_enter";
 
+    // Events
     EventDataRecorded eventDataRecorded = new EventDataRecorded();
 
+    // References
     private ShopList listInUse;
     private ShopItem lastItem = null;
     private DatabaseManager database;
@@ -58,7 +64,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     /**
      * Allow local shopping trip data to be pushed to the database
      */
-    public void saveDataToDataBase() {
+    void saveDataToDataBase() {
         for (ItemToItemData datum : dataQueue) {
             database.addItemQueue(datum.item1Name);
             database.addItemQueue(datum.item2Name);
@@ -121,6 +127,8 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
 
     }
 
+
+    // EVENTS
 
     class EventDataRecorded extends Event<IEarDataRecorded> {
         void fire(ItemToItemData data) {
