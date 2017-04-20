@@ -86,7 +86,7 @@ class ItemGraph {
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {
         this.foodNameManager = foodNameMgr;
         nodes = new HashMap<>();
-        storeEntrance = new Node("");
+        storeEntrance = new Node(DataCollector.STORE_ENTRANCE_NAME);
         nodes.put(storeEntrance.itemName, storeEntrance);
 
         populateFromData(data);
@@ -101,12 +101,12 @@ class ItemGraph {
      * @return
      */
     long minDist(ShopItem item1, ShopItem item2) {
-        return minDist(item1 == null ? "" : item1.getName(),
-                       item2 == null ? "" : item2.getName());
+        return minDist(item1 == null ? DataCollector.STORE_ENTRANCE_NAME : item1.getName(),
+                       item2 == null ? DataCollector.STORE_ENTRANCE_NAME : item2.getName());
     }
 
     /**
-     * Store entrance should be denoted with an empty item name ("").
+     * Store entrance should be denoted with DataCollector.STORE_ENTRANCE_NAME.
      * @param item1Name
      * @param item2Name
      * @return
