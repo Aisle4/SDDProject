@@ -37,7 +37,7 @@ public class RenameListDialog extends DialogFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) { onListTitleUpdated(s.toString()); }
         });
 
         index = getArguments().getInt("INDEX");
@@ -63,7 +63,21 @@ public class RenameListDialog extends DialogFragment {
 
     @Override public void onStart() {
         super.onStart();
-
+        final AlertDialog dialog = (AlertDialog)getDialog();
+        if(dialog != null) {
+            posBtn = (Button)dialog.getButton(Dialog.BUTTON_POSITIVE);
+            posBtn.setEnabled(false);
+        }
     }
 
+    private void onListTitleUpdated(String title) {
+        if (title.equals("")) {
+            // Invalid Title
+            if (posBtn.isEnabled()) posBtn.setEnabled(false);
+        }
+        else {
+            // Valid Title
+            if (!posBtn.isEnabled()) posBtn.setEnabled(true);
+        }
+    }
 }

@@ -45,11 +45,6 @@ public class NewListDialog extends DialogFragment {
             }
         });
 
-//        if (editText.requestFocus()) {
-//            getActivity().getWindow().setSoftInputMode(
-//                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-//        }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setMessage(R.string.btn_new_list);
