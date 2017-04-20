@@ -64,9 +64,12 @@ class DatabaseManager {
         }
 
         results = parseData(stringResults);
-        Log.d("Debug", "Post Parse test " + results.get(0).item1Name + " " + results.get(0).item2Name + " " + results.get(0).steps + " " + results.get(0).timeMs);
-
-        return results; // should return all data
+        if(results != null) {
+            Log.d("Debug", "Post Parse test " + results.get(0).item1Name + " " + results.get(0).item2Name + " " + results.get(0).steps + " " + results.get(0).timeMs);
+            return results; // should return all data
+        }else{
+            return new ArrayList<>();
+        }
     }
 
 
@@ -106,6 +109,7 @@ class DatabaseManager {
     }
 
     private List<ItemToItemData> parseData(String data){
+        if (data == null || data.compareTo("")==0) return null;
         ArrayList<ItemToItemData> results = new ArrayList<>();
         String rows[] = data.split("\\Q<br>\\E");
         for (String row: rows) {
