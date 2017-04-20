@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.List;
  * and be notified when fire is called.
  * @param <T>
  */
-abstract class Event<T> {
-    List<T> listeners = new ArrayList<T>();
-    void attach(T listener) {
+public abstract class Event<T> {
+    protected List<T> listeners = new ArrayList<T>();
+    public void attach(T listener) {
         listeners.add(listener);
     }
-    void dettach(T listener) {
+    public void dettach(T listener) {
         listeners.remove(listener);
     }
 }

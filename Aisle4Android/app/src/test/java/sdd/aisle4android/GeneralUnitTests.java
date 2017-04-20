@@ -1,11 +1,14 @@
 package sdd.aisle4android;
 
-import android.provider.ContactsContract;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sdd.aisle4android.Model.DataCollector;
+import sdd.aisle4android.Model.FoodNameManager;
+import sdd.aisle4android.Model.ItemGraph;
+import sdd.aisle4android.Model.ItemToItemData;
 
 import static org.junit.Assert.*;
 

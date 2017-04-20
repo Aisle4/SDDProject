@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.app.Application;
 import android.hardware.Sensor;
@@ -9,6 +9,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sdd.aisle4android.Model.Database.DatabaseManager;
+import sdd.aisle4android.Util.Event;
 
 /**
  * Created by Robert Wild on 26/03/2017.
@@ -64,7 +67,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
     /**
      * Allow local shopping trip data to be pushed to the database
      */
-    void saveDataToDataBase() {
+    public void saveDataToDataBase() {
         for (ItemToItemData datum : dataQueue) {
             database.addItemQueue(datum.item1Name);
             database.addItemQueue(datum.item2Name);

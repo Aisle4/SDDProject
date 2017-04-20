@@ -1,15 +1,5 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model.Database;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -17,10 +7,9 @@ import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import sdd.aisle4android.Model.ItemToItemData;
 
 
 /**
@@ -30,7 +19,7 @@ import android.util.Log;
  * Created by John on 3/26/2017.
  */
 
-class DatabaseManager {
+public class DatabaseManager {
     //Public static command strings
     public static final String baseLink = "http://www.carryncare.com/aisle4/server_copy.php" ;
     public static final String ITEM_TO_ITEM_MANUAL_COMMAND = "new_item_to_item";
@@ -42,7 +31,7 @@ class DatabaseManager {
     private Queue<Object[]> commandQueue;
     private Context context;
 
-    DatabaseManager(Context context)
+    public DatabaseManager(Context context)
     {
         this.context = context;
         commandQueue = new PriorityQueue<>();

@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model.Database;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,8 +11,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class is meant to represent any single command that is sent to the database server.

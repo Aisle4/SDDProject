@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.view.Menu;
+
+import sdd.aisle4android.R;
+import sdd.aisle4android.Util.ListArrayAdapter;
 
 
 public class HomeActivity extends AppCompatActivity

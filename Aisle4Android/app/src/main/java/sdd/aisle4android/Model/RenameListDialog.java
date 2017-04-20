@@ -1,59 +1,57 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.WindowManager;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-/**
- * Created by cameron on 3/8/17.
- */
-
-import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.app.Activity;
+import sdd.aisle4android.R;
 
 
-public class NewListDialog extends DialogFragment {
+public class RenameListDialog extends DialogFragment {
     private EditText editText;
     private Button posBtn;
+    private Button negBtn;
+    private int index;
 
     public interface Listener {
-        void onNewListDialogConfirm(String listName);
+        void onRenameListDialogConfirm(String itemName, int index);
     }
 
-    @Override @NonNull public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @Override @NonNull
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_new_list, null);
+        final View view = inflater.inflate(R.layout.dialog_rename_list, null);
 
-        editText = (EditText)view.findViewById(R.id.dialog_new_list_input);
+        editText = (EditText)view.findViewById(R.id.dialog_rename_list_input);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
-            public void afterTextChanged(Editable s) {
-                onListTitleUpdated(s.toString());
-            }
+            public void afterTextChanged(Editable s) { onListTitleUpdated(s.toString()); }
         });
+
+        index = getArguments().getInt("INDEX");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.setMessage(R.string.btn_new_list);
+        builder.setMessage(R.string.dialog_rename_list_heading);
 
-        builder.setPositiveButton(R.string.btn_new_list_positive, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.btn_rename_list_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                String listTitle = editText.getText().toString();
+                String newListTitle = editText.getText().toString();
                 Listener listener = (Listener)getActivity();
-                listener.onNewListDialogConfirm(listTitle);
+                listener.onRenameListDialogConfirm(newListTitle, index);
             }
         });
         builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -63,6 +61,7 @@ public class NewListDialog extends DialogFragment {
 
         return builder.create();
     }
+
     @Override public void onStart() {
         super.onStart();
         final AlertDialog dialog = (AlertDialog)getDialog();
@@ -71,6 +70,7 @@ public class NewListDialog extends DialogFragment {
             posBtn.setEnabled(false);
         }
     }
+
     private void onListTitleUpdated(String title) {
         if (title.equals("")) {
             // Invalid Title

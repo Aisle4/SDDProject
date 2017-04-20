@@ -1,16 +1,16 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 /**
  * Created by Robert Wild on 26/03/2017.
  */
 
-class ItemToItemData {
-    String item1Name;
-    String item2Name;
-    long timeMs;
-    int steps;
+public class ItemToItemData {
+    public String item1Name;
+    public String item2Name;
+    public long timeMs;
+    public int steps;
 
-    ItemToItemData(String item1Name, String item2Name, long timeMs, int steps) {
+    public ItemToItemData(String item1Name, String item2Name, long timeMs, int steps) {
         this.item1Name = item1Name;
         this.item2Name = item2Name;
         this.timeMs = timeMs;

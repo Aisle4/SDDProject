@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.content.Context;
 
@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.Calendar;
 import java.util.UUID;
 
+import sdd.aisle4android.Model.Database.LocalDatabaseHelper;
+import sdd.aisle4android.Util.Event;
+
 
 /**
  * Created by Robert Wild on 14/03/2017.
  */
 
 // TODO: implement method stubs
-class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
+public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
     EventItemCollected eventItemCollected = new EventItemCollected();
     EventItemsChanged eventItemsChanged = new EventItemsChanged();
     EventOrderChanged eventOrderChanged = new EventOrderChanged();
@@ -36,7 +39,7 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
         this.uniqueID = UUID.randomUUID().toString();
     }
 
-    ShopList(String id, String name, Long creation, Context context) {
+    public ShopList(String id, String name, Long creation, Context context) {
         this.name = name;
         this.created = creation;
         this.creationDate = creation;
@@ -53,26 +56,26 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
 
     // PUBLIC ACCESSORS
 
-    String getName() {
+    public String getName() {
         return name;
     }
-    String getUniqueID() {
+    public String getUniqueID() {
         return uniqueID;
     }
-    String getNameDate() {//TODO: this should be formatted better
+    public String getNameDate() {//TODO: this should be formatted better
         return name + "    Created: " + getCreationDate();
     }
-    ShopItem getItem(int index) {
+    public ShopItem getItem(int index) {
         return items.get(index);
     }
-    Long getCreated() {
+    public Long getCreated() {
         return created;
     }
-    List<ShopItem> getItems() {
+    public List<ShopItem> getItems() {
         return items; // TODO: make unmodifiable? and each item?
     }
-    long getCreationDateMillis() { return creationDate; }
-    String getCreationDate() {
+    public long getCreationDateMillis() { return creationDate; }
+    public String getCreationDate() {
         //find each checkpoint (ie. today, yesterday) and compare
         Calendar temp = Calendar.getInstance();
         temp = setMidnight(temp);
@@ -101,11 +104,11 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
 
     // PUBLIC MODIFIERS
 
-    void rename(String name) {
+    public void rename(String name) {
         this.name = name;
         dbUpdateList();
     }
-    ShopItem addItem(ShopItem item) {
+    public ShopItem addItem(ShopItem item) {
         dbAddItem(item);
         items.add(item);
         item.eventCollected.attach(this);
@@ -113,12 +116,12 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
         eventItemsChanged.fire(this);
         return item;
     }
-    void addItemFromDB(ShopItem item) {
+    public void addItemFromDB(ShopItem item) {
         items.add(item);
         item.eventCollected.attach(this);
         item.eventStateChanged.attach(this);
     }
-    void removeItem(ShopItem item) {
+    public void removeItem(ShopItem item) {
         item.eventCollected.dettach(this);
         item.eventStateChanged.dettach(this);
 
@@ -126,7 +129,7 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
         dbDeleteItem(item);
         eventItemsChanged.fire(this);
     }
-    void removeItem(int index) {
+    public void removeItem(int index) {
         ShopItem item = items.get(index);
         item.eventCollected.dettach(this);
         item.eventStateChanged.dettach(this);
@@ -135,11 +138,11 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
         items.remove(index);
         eventItemsChanged.fire(this);
     }
-    void notifyReordered() {
+    public void notifyReordered() {
         // TODO: prevent sorting of list outside of this class... and order in place here somehow...?
         eventOrderChanged.fire(this);
     }
-    void unmarkAllItems() {
+    public void unmarkAllItems() {
         for (ShopItem item : items) {
             item.setCollected(false);
         }
@@ -152,6 +155,32 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
     @Override
     public void onItemStateChanged(ShopItem item) {
         this.eventItemsChanged.fire(this);
+    }
+
+    // Sorting
+    public void sortAlphabetical(){
+        Collections.sort(items, new Comparator<ShopItem>() {
+            @Override
+            public int compare(ShopItem o1, ShopItem o2) {
+                return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),o2.getName());
+            }
+        });
+        eventOrderChanged.fire(this);
+    }
+    public void sortChronological(){
+        Collections.sort(items, new Comparator<ShopItem>() {
+            @Override
+            public int compare(ShopItem o1, ShopItem o2) {
+                if(o1.getAddedDate() > o2.getAddedDate()){
+                    return 1;
+                }
+                if(o2.getAddedDate() > o1.getAddedDate()){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        eventOrderChanged.fire(this);
     }
 
 
@@ -172,32 +201,6 @@ class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.updateList(this);
         db.close();
-    }
-
-    // Sorting
-    void sortAlphabetical(){
-        Collections.sort(items, new Comparator<ShopItem>() {
-            @Override
-            public int compare(ShopItem o1, ShopItem o2) {
-                return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),o2.getName());
-            }
-        });
-        eventOrderChanged.fire(this);
-    }
-    void sortChronological(){
-        Collections.sort(items, new Comparator<ShopItem>() {
-            @Override
-            public int compare(ShopItem o1, ShopItem o2) {
-                if(o1.getAddedDate() > o2.getAddedDate()){
-                    return 1;
-                }
-                if(o2.getAddedDate() > o1.getAddedDate()){
-                    return -1;
-                }
-                return 0;
-            }
-        });
-        eventOrderChanged.fire(this);
     }
 
 

@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import sdd.aisle4android.R;
+import sdd.aisle4android.Util.ItemArrayAdapter;
 
 
 public class ListActivity extends AppCompatActivity

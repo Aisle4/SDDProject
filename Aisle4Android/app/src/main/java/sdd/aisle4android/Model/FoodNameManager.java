@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class FoodNameManager {
     // (name, category) pairs
     private Map<String, String> nameCategoryMap = new HashMap<String, String>();
 
-    FoodNameManager() {
+    public FoodNameManager() {
         String data = getFoodCategoryData();
 
         //split the string by lines
@@ -29,13 +29,13 @@ public class FoodNameManager {
         }
     }
 
-    String[] getFoodNames() {
+    public String[] getFoodNames() {
         return nameCategoryMap.keySet().toArray(new String[nameCategoryMap.size()]);
     }
-    String[] getCategories() {
+    public String[] getCategories() {
         return nameCategoryMap.values().toArray(new String[nameCategoryMap.size()]);
     }
-    String getCategory(String itemName) {
+    public String getCategory(String itemName) {
         return nameCategoryMap.get(itemName.toLowerCase());
     }
 

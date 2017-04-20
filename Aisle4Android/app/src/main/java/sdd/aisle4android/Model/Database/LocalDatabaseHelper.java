@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sdd.aisle4android.Model.ShopItem;
+import sdd.aisle4android.Model.ShopList;
 
 /**
  * Created by cameron on 4/12/17.

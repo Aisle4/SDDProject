@@ -1,9 +1,12 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.content.Context;
 import android.os.SystemClock;
 
 import java.util.List;
+
+import sdd.aisle4android.Model.Database.LocalDatabaseHelper;
+import sdd.aisle4android.Util.Event;
 
 /**
  * Created by Robert Wild on 29/03/2017.
@@ -58,7 +61,7 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
 
     // PUBLIC MODIFIERS
 
-    void startShopping(ShopList list) {
+    public void startShopping(ShopList list) {
         isShopping = true;
         activeShopList = list;
         list.eventItemCollected.attach(this);
@@ -70,7 +73,7 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
         nearestItem = null;
         eventLocationUpdated.fire(this, nearestItem);
     }
-    void endShopping() {
+    public void endShopping() {
         isShopping = false;
         activeShopList.eventItemCollected.dettach(this);
         activeShopList.eventItemsChanged.dettach(this);
@@ -78,19 +81,19 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
 
         eventStopShopping.fire(this);
     }
-    void addShopList(ShopList list) {
+    public void addShopList(ShopList list) {
         shopLists.add(list);
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.addList(list);
         db.close();
     }
-    void removeShopList(ShopList list) {
+    public void removeShopList(ShopList list) {
         shopLists.remove(list);
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.deleteList(list);
         db.close();
     }
-    void removeShopList(int index) {
+    public void removeShopList(int index) {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.deleteList(shopLists.get(index));
         db.close();
@@ -114,44 +117,44 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
 
     // EVENTS
 
-    class EventStartShopping extends Event<IEarStartShopping> {
+    public class EventStartShopping extends Event<IEarStartShopping> {
         void fire(Shopper shopper) {
             for (IEarStartShopping listener : listeners) {
                 listener.onStartShopping(shopper);
             }
         }
     }
-    interface IEarStartShopping {
+    public interface IEarStartShopping {
         void onStartShopping(Shopper shopper);
     }
-    class EventStopShopping extends Event<IEarStopShopping> {
+    public class EventStopShopping extends Event<IEarStopShopping> {
         void fire(Shopper shopper) {
             for (IEarStopShopping listener : listeners) {
                 listener.onStopShopping(shopper);
             }
         }
     }
-    interface IEarStopShopping {
+    public interface IEarStopShopping {
         void onStopShopping(Shopper shopper);
     }
-    class EventLocationUpdated extends Event<IEarLocationUpdated> {
+    public class EventLocationUpdated extends Event<IEarLocationUpdated> {
         void fire(Shopper shopper, ShopItem nearestItem) {
             for (IEarLocationUpdated listener : listeners) {
                 listener.onLocationUpdated(shopper, nearestItem);
             }
         }
     }
-    interface IEarLocationUpdated {
+    public interface IEarLocationUpdated {
         void onLocationUpdated(Shopper shopper, ShopItem nearestItem);
     }
-    class EventShopperListItemsChanged extends Event<IEarListItemsChanged> {
+    public class EventShopperListItemsChanged extends Event<IEarListItemsChanged> {
         void fire(Shopper shopper) {
             for (IEarListItemsChanged listener : listeners) {
                 listener.onShopperListItemsChanged(shopper);
             }
         }
     }
-    interface IEarListItemsChanged {
+    public interface IEarListItemsChanged {
         void onShopperListItemsChanged(Shopper shopper);
     }
 }

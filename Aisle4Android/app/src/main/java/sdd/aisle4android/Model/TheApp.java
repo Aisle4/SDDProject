@@ -1,13 +1,8 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.app.Application;
-import android.content.Context;
-import android.database.Observable;
-import android.os.SystemClock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import sdd.aisle4android.Model.Database.DatabaseManager;
 
 /**
  * Created by Robert Wild on 14/03/2017.

@@ -1,8 +1,6 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Util;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import sdd.aisle4android.Model.ShopList;
+import sdd.aisle4android.R;
+
+
 /**
  * Created by cameron on 3/26/17.
  **/
 
- class ListArrayAdapter extends ArrayAdapter<ShopList> {
+public class ListArrayAdapter extends ArrayAdapter<ShopList> {
 
-    ListArrayAdapter(Context context, List<ShopList> ShopListList) {
+    public ListArrayAdapter(Context context, List<ShopList> ShopListList) {
         super(context, 0, ShopListList);
     }
 

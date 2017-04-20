@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sdd.aisle4android.HomeActivity">
+    tools:context="sdd.aisle4android.Model.HomeActivity">
 
     <!--  Include home_toolbar XML layout  -->
     <android.support.v7.widget.Toolbar

@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,7 +13,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
+
+import sdd.aisle4android.R;
 
 /**
  * Created by cameron on 3/8/17.

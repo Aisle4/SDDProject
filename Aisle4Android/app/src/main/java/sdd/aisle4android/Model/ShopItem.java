@@ -1,4 +1,4 @@
-package sdd.aisle4android;
+package sdd.aisle4android.Model;
 
 /**
  * Created by Robert Wild on 14/03/2017.
@@ -8,7 +8,10 @@ import android.content.Context;
 
 import java.util.UUID;
 
-class ShopItem {
+import sdd.aisle4android.Model.Database.LocalDatabaseHelper;
+import sdd.aisle4android.Util.Event;
+
+public class ShopItem {
     EventCollected eventCollected = new EventCollected();
     EventStateChanged eventStateChanged = new EventStateChanged();
 
@@ -26,7 +29,7 @@ class ShopItem {
         this.context = context;
     }
 
-    ShopItem(String name, boolean collected, long addedDate, String uniqueID, Context context){
+    public ShopItem(String name, boolean collected, long addedDate, String uniqueID, Context context){
         this.name = name;
         this.collected = collected;
         this.addedDate = addedDate;
@@ -37,14 +40,14 @@ class ShopItem {
 
     // PUBLIC ACCESSORS
 
-    String getName() {
+    public String getName() {
         return name;
     }
-    String getUniqueID() { return uniqueID; }
-    Boolean isCollected(){
+    public String getUniqueID() { return uniqueID; }
+    public Boolean isCollected(){
         return collected;
     }
-    long getAddedDate(){return addedDate;}
+    public long getAddedDate(){return addedDate;}
 
     // LOCAL DATABASE MODIFIERS
 
@@ -55,9 +58,9 @@ class ShopItem {
     }
 
 
-    // PRIVATE MODIFIERS
+    // PUBLIC MODIFIERS
 
-    void setCollected(boolean collected) {
+    public void setCollected(boolean collected) {
         if (this.collected == collected) return;
 
         this.collected = collected;
