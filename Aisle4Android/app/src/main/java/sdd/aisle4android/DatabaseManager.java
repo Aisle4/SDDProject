@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -37,14 +38,23 @@ class DatabaseManager {
 
     //NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-
-
     DatabaseManager(Context context)
     {
         this.context = context;
         commandQueue = new PriorityQueue<>();
     }
 
+
+
+    // PUBLIC ACCESSORS
+
+    public List<ItemToItemData> getData() {
+        // TODO: we neeeed this!
+        return null; // should return all data
+    }
+
+
+    // PUBLIC MODIFIERS
 
     public void executeQueue(){
         //boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
@@ -64,8 +74,6 @@ class DatabaseManager {
             Log.d("Debug", "Queue could not execute due to not having a connection");
         }
     }
-
-    // PUBLIC MODIFIERS
 
     public void addItemQueue(String name){
         Log.d("Debug", "Adding item " + name);
