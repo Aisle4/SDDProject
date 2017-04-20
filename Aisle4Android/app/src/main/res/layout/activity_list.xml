@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sdd.aisle4android.HomeActivity">
 
-    <!--  Include home_toolbar XML layout  -->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/list_toolbar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        />
+        android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/list_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginBottom="?attr/actionBarSize"
-
-        />
-    <!--  Lower Panel  -->
-    <LinearLayout
-        android:id="@+id/list_lower_panel"
-        android:layout_width="fill_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-
-        <Button
-            android:id="@+id/list_btn_shop"
-            android:onClick="onClickBtnShop"
-            android:text="@string/btn_shop"
-            android:textSize="17sp"
-            android:textColor="#FFFFFF"
+        <!--  Include home_toolbar XML layout  -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/list_toolbar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:elevation="4dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             />
-        <!--  Vertical divider line  -->
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#FFFFFF" />
-        <Button
-            android:id="@+id/list_btn_new_item"
-            android:onClick="onClickBtnAddItem"
-            android:text="@string/btn_add_item"
-            android:textSize="17sp"
-            android:textColor="#FFFFFF"
-            android:background="@color/colorPrimary"
-            android:layout_width="0dp"
+
+        <ListView
+            android:id="@+id/list_list"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:padding="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp" />
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="?attr/actionBarSize"
 
-    </LinearLayout>
+            />
+        <!--  Lower Panel  -->
+        <LinearLayout
+            android:id="@+id/list_lower_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/list_btn_shop"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@color/colorPrimary"
+                android:onClick="onClickBtnShop"
+                android:text="@string/btn_shop"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <!--  Vertical divider line  -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#FFFFFF" />
+            <Button
+                android:id="@+id/list_btn_new_item"
+                android:onClick="onClickBtnAddItem"
+                android:text="@string/btn_add_item"
+                android:textSize="17sp"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:padding="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

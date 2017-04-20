@@ -235,7 +235,7 @@ public class ListActivity extends AppCompatActivity
         String fromItem = data.item1Name == null || data.item1Name.equals("") ? "entrance" : data.item1Name;
         String msg = data.steps + " steps   " + seconds + " sec   from " + fromItem;
 
-        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.activity_main), msg, Snackbar.LENGTH_LONG).show();
     }
     private void showSaveDataPopup() {
         // Define response
@@ -247,7 +247,7 @@ public class ListActivity extends AppCompatActivity
         };
 
         // Create popup
-        Snackbar.make(findViewById(android.R.id.content), R.string.save_data_question, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(findViewById(R.id.activity_main), R.string.save_data_question, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.yes, onYesResponse)
                 .show();
     }
