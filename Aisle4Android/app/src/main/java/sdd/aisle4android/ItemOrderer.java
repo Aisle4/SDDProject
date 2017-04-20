@@ -18,7 +18,6 @@ import java.util.Map;
  */
 class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsChanged {
 
-    // Graph with item distance estimates for edges
     private ItemGraph graph;
 
 
@@ -41,12 +40,19 @@ class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsC
         }
     }
 
+    /**
+     * Order list by proximity to nearestItem
+     * @param list
+     * @param nearestItem
+     */
     void orderList(ShopList list, ShopItem nearestItem) {
         Collections.sort(list.getItems(), new ItemComparator(nearestItem));
         list.notifyReordered();
     }
 
-
+    /**
+     * Comparator for ordering items by proximity
+     */
     private class ItemComparator implements Comparator<ShopItem> {
         private ShopItem referenceItem;
 
@@ -74,6 +80,10 @@ class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsC
 }
 
 
+/**
+ * Graph of item names as nodes and item distance estimates for edges.
+ * Constructed using ItemToItem data instances and item-category data from FoodNameManager.
+ */
 class ItemGraph {
     private FoodNameManager foodNameManager;
     private HashMap<String, Node> nodes;
@@ -100,7 +110,8 @@ class ItemGraph {
     }
 
     /**
-     * Store entrance should be denoted by null
+     * Determine the distance of the shortest path between item1 and item2.
+     * Store entrance should be denoted by null instead of an item instance.
      * @param item1
      * @param item2
      * @return
@@ -111,6 +122,7 @@ class ItemGraph {
     }
 
     /**
+     * Determine the distance of the shortest path between item1Name and item2Name.
      * Store entrance should be denoted with DataCollector.STORE_ENTRANCE_NAME.
      * @param item1Name
      * @param item2Name
@@ -271,7 +283,7 @@ class ItemGraph {
         List<Integer> stepsData = new ArrayList<>();
     }
 
-    /** Sorts based on tmpDist */
+    /** Sorts based on Node tmpDist */
     private class ComparatorTmpDist implements Comparator<Node> {
         @Override
         public int compare(Node n1, Node n2) {
