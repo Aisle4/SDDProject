@@ -55,6 +55,7 @@ public class TheApp extends Application {
         //-------------
 
         database = new DatabaseManager(this);
+        //database.getData();
         //database.addItemQueue("UnitTest");
         //database.addItemToItemQueue("test", "UnitTest", 10, 10000);
         foodNameManager = new FoodNameManager();

@@ -10,9 +10,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -30,6 +32,7 @@ class DatabaseManager {
     public static final String ITEM_TO_ITEM_MANUAL_COMMAND = "new_item_to_item";
     public static final String NEW_ITEM_COMMAND = "new_item";
     public static final String SUCCESS_MESSAGE = "Values have been inserted successfully";
+    public static final String GET_DATA = "get_data";
 
     private Queue<Object[]> commandQueue;
     private Context context;
@@ -49,8 +52,21 @@ class DatabaseManager {
     // PUBLIC ACCESSORS
 
     public List<ItemToItemData> getData() {
-        // TODO: we neeeed this!
-        return null; // should return all data
+        Log.d("Debug", "Attempting to get list from remote");
+        List<ItemToItemData> results;
+        String stringResults = "";
+        try {
+            stringResults = (String) (new RemoteCommsTask().execute(GET_DATA)).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        results = parseData(stringResults);
+        Log.d("Debug", "Post Parse test " + results.get(0).item1Name + " " + results.get(0).item2Name + " " + results.get(0).steps + " " + results.get(0).timeMs);
+
+        return results; // should return all data
     }
 
 
@@ -87,6 +103,17 @@ class DatabaseManager {
         Object queueCommand[] = {ITEM_TO_ITEM_MANUAL_COMMAND, item1Name, item2Name, steps, travel_time};
         commandQueue.add(queueCommand);
         executeQueue();
+    }
+
+    private List<ItemToItemData> parseData(String data){
+        ArrayList<ItemToItemData> results = new ArrayList<>();
+        String rows[] = data.split("\\Q<br>\\E");
+        for (String row: rows) {
+            String elements[] = row.split("\\Q|\\E");
+            Log.d("ParseDebug", elements[0] + " " + elements[1] + " " + elements[2] + " " + elements[3]);
+            results.add(new ItemToItemData(elements[0], elements[1], Integer.parseInt(elements[3]), Integer.parseInt(elements[2])));
+        }
+        return results;
     }
 
 
