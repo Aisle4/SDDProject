@@ -26,6 +26,12 @@ public class RemoteCommsTask extends AsyncTask {
     private String SUCCESS_MESSAGE = DatabaseManager.SUCCESS_MESSAGE;
     private String GET_DATA = DatabaseManager.GET_DATA;
 
+    /**
+     * This function is responsible for communicating with the database server and giving it the command to add an item to the database
+     * @param name The name of the item to be added to the database
+     * @return The response from the server
+     * @throws IOException For when communication with the server fails.
+     */
     private String addItem(String name) throws IOException {
         Log.d("Debug", "Add item launched");
 
@@ -59,6 +65,16 @@ public class RemoteCommsTask extends AsyncTask {
         return builder.toString();
 
     }
+
+    /**
+     * This function is responsible for communicating with the database server and giving it the command to add an itemToItem relationship to the database
+     * @param item1Name The name of the first item in the relationship.
+     * @param item2Name The name of the second item in the relationship.
+     * @param steps The number of step taken in between checking off both items.
+     * @param travel_time The amount of time elapsed in between checking off both items.
+     * @return The response of the database
+     * @throws IOException For when communication with the server fails.
+     */
     private String addItemToItem(String item1Name, String item2Name, int steps, int travel_time) throws IOException {
         Log.d("Debug", "Add Item to Item launched");
 
@@ -99,6 +115,11 @@ public class RemoteCommsTask extends AsyncTask {
 
     }
 
+    /**
+     * This is the function responsible for communicating with the database server and submitting a query for all ItemToitem data.
+     * @return This function returns the raw string response from the database server.
+     * @throws IOException For when communication with the server fails.
+     */
     private String getData() throws IOException {
         Log.d("Debug", "Get data launched");
 
@@ -131,6 +152,11 @@ public class RemoteCommsTask extends AsyncTask {
 
     }
 
+    /**
+     * This function is responsible for launching functions to communicate with the database server in their won threads.
+     * @param params These parameters are whatever commands and attributes are given to be executed.
+     * @return A string response from the database server.
+     */
     @Override
     protected Object doInBackground(Object[] params) {
         Log.d("Debug", "Thread Launched");

@@ -51,6 +51,10 @@ class DatabaseManager {
 
     // PUBLIC ACCESSORS
 
+    /**
+     * This is the funtion that can be used to gather all of the item relationships needed to build a pathing graph from the database
+     * @return An ArrayList of ItemToItemData objects that hold all of the information on the item_to_item tables of the database.
+     */
     public List<ItemToItemData> getData() {
         Log.d("Debug", "Attempting to get list from remote");
         List<ItemToItemData> results;
@@ -75,6 +79,9 @@ class DatabaseManager {
 
     // PUBLIC MODIFIERS
 
+    /**
+     * This is the function that is called to execute all commands that are stored in the command queue.
+     */
     public void executeQueue(){
         //boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if(true) {
@@ -94,6 +101,10 @@ class DatabaseManager {
         }
     }
 
+    /**
+     * This function adds a command to insert an item into the database into the command queue.
+     * @param name The name of the item that is to be inserted into the database.
+     */
     public void addItemQueue(String name){
         Log.d("Debug", "Adding item " + name);
         Object queueCommand[] = {NEW_ITEM_COMMAND, name};
@@ -101,6 +112,13 @@ class DatabaseManager {
         executeQueue();
     }
 
+    /**
+     * This funciton adds a command to insert an item_to_item relationship into the database into the command queue.
+     * @param item1Name The name of the first item in the item_to_item relationship.
+     * @param item2Name The name of the second item in the item_to_item relationship.
+     * @param steps The number of steps taken in between collecting the two items.
+     * @param travel_time The amount of time that elapsed in between collecting the two items.
+     */
     public void addItemToItemQueue(String item1Name, String item2Name, int steps, int travel_time){
         Log.d("Debug", "Adding item to item relation " + item1Name + " " + item2Name + " " + Integer.toString(steps) + " " + Integer.toString(travel_time));
         Object queueCommand[] = {ITEM_TO_ITEM_MANUAL_COMMAND, item1Name, item2Name, steps, travel_time};
@@ -108,6 +126,11 @@ class DatabaseManager {
         executeQueue();
     }
 
+    /**
+     * This is the function used to convert the String data taken directly from the database into a list of ItemToItemData objects
+     * @param data The string data take directly from the database
+     * @return The information taken from the database that has been converted into a list of ItemToItemData objects
+     */
     private List<ItemToItemData> parseData(String data){
         if (data == null || data.compareTo("")==0) return null;
         ArrayList<ItemToItemData> results = new ArrayList<>();

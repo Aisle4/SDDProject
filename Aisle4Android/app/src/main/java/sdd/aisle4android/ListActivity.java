@@ -252,11 +252,15 @@ public class ListActivity extends AppCompatActivity
                 .show();
     }
 
+    /**
+     * Clean up events
+     */
     private void dettachEvents() {
         shopList.eventOrderChanged.dettach(this);
         app.getDataCollector().eventDataRecorded.dettach(this);
     }
 
+    //Helper functions
     private String secondsToString(int pTime) {
         return String.format("%02d:%02d", pTime / 60, pTime % 60); // TODO: locale
     }
