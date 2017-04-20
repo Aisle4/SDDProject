@@ -13,8 +13,7 @@ import java.util.Map;
  * Created by Robert Wild on 05/04/2017.
  */
 
-class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
-        Shopper.IEarLocationUpdated {
+class ItemOrderer implements Shopper.IEarLocationUpdated, Shopper.IEarListItemsChanged {
 
     private ItemGraph graph;
 
@@ -22,27 +21,26 @@ class ItemOrderer implements Shopper.IEarStartShopping, Shopper.IEarStopShopping
                        FoodNameManager foodNameMgr) {
         graph = new ItemGraph(data, foodNameMgr);
 
-        shopper.eventStartShopping.attach(this);
-        shopper.eventStopShopping.attach(this);
         shopper.eventLocationUpdated.attach(this);
+        shopper.eventListItemsChanged.attach(this);
     }
 
-    public void onStartShopping(Shopper shopper) {
-        // TODO: remove? order list when location updated which for now always happens on start shopping...
-//        orderList(shopper.getActiveList(), shopper.getNearestItem());
-    }
-    public void onStopShopping(Shopper shopper) {
-    }
+    @Override
     public void onLocationUpdated(Shopper shopper, ShopItem nearest) {
         orderList(shopper.getActiveList(), nearest);
     }
+    @Override
+    public void onShopperListItemsChanged(Shopper shopper) {
+        if (shopper.isShopping()) {
+            orderList(shopper.getActiveList(), shopper.getNearestItem());
+        }
+    }
 
-    // TODO: make private - how to unit test? public, move event handling / ordering commencing code to OrdererController?
     void orderList(ShopList list, ShopItem nearestItem) {
-        // TODO: use custom sort function instead of comparator to avoid redundant dijkstra's calculations
         Collections.sort(list.getItems(), new ItemComparator(nearestItem));
         list.notifyReordered();
     }
+
 
     private class ItemComparator implements Comparator<ShopItem> {
         private ShopItem referenceItem;

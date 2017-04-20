@@ -58,6 +58,7 @@ class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShoppi
      */
     public void saveDataToDataBase() {
         for (ItemToItemData datum : dataQueue) {
+            database.addItemQueue(datum.item1Name);
             database.addItemQueue(datum.item2Name);
             database.addItemToItemQueue(datum.item1Name, datum.item2Name, datum.steps, (int)datum.timeMs);
         }
