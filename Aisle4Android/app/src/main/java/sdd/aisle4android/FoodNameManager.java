@@ -17,8 +17,31 @@ public class FoodNameManager {
     private Map<String, String> nameCategoryMap = new HashMap<String, String>();
 
     FoodNameManager() {
-        //hard coded values for demo
-        String obnoxiousDemoString = "brownie mix,Baking Goods\n" +
+        String data = getFoodCategoryData();
+
+        //split the string by lines
+        String[] nameCategoryArray = data.split("\n");
+        String[] foodNameParse;
+        for (int i = 0; i < nameCategoryArray.length; ++i ){
+            //read in each line and put in map (format name,category)
+            foodNameParse = nameCategoryArray[i].split(",");
+            nameCategoryMap.put(foodNameParse[0], foodNameParse[1]);
+        }
+    }
+
+    String[] getFoodNames() {
+        return nameCategoryMap.keySet().toArray(new String[nameCategoryMap.size()]);
+    }
+    String[] getCategories() {
+        return nameCategoryMap.values().toArray(new String[nameCategoryMap.size()]);
+    }
+    String getCategory(String itemName) {
+        return nameCategoryMap.get(itemName.toLowerCase());
+    }
+
+    private String getFoodCategoryData() {
+        // TODO: read this from a file
+        return "brownie mix,Baking Goods\n" +
                 "flour,Baking Goods\n" +
                 "sugar,Baking Goods\n" +
                 "coffee,Beverage\n" +
@@ -239,46 +262,5 @@ public class FoodNameManager {
                 "paprika,Spices\n" +
                 "pepper,Spices\n" +
                 "salt,Spices\n";
-        //split the string by lines
-        String[] nameCategoryArray = obnoxiousDemoString.split("\n");
-        String[] foodNameParse;
-        for(int i = 0; i<nameCategoryArray.length; ++i ){
-            //read in each "line" and put in map (format name,category)
-            foodNameParse = nameCategoryArray[i].split(",");
-            nameCategoryMap.put(foodNameParse[0], foodNameParse[1]);
-        }
-
-        /*
-        try
-        {
-            // open file to read
-            BufferedReader br = new BufferedReader(new FileReader(groceryItem.csv));
-            String currentLine;
-            String[] nameCategoryArray;
-            while ((currentLine = br.readLine())!= null){
-                nameCategoryArray = currentLine.split(","); // split the current line of file in format "name, category"
-                nameCategoryMap.put(nameCategoryArray[0], nameCategoryArray[1]);
-            }
-        }
-        catch (IOException e)
-        {
-            System.out.println("Error reading file");
-        }*/
-        // test items
-
-        /*nameCategoryMap.put("carrot", "produce");
-        nameCategoryMap.put("apple", "produce");
-        nameCategoryMap.put("mango", "produce");
-        nameCategoryMap.put("potato", "produce");*/
-    }
-
-    String[] getFoodNames() {
-        return nameCategoryMap.keySet().toArray(new String[nameCategoryMap.size()]);
-    }
-    String[] getCategories() {
-        return nameCategoryMap.values().toArray(new String[nameCategoryMap.size()]);
-    }
-    String getCategory(String itemName) {
-        return nameCategoryMap.get(itemName.toLowerCase());
     }
 }
