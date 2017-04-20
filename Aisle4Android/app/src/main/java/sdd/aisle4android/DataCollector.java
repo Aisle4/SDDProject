@@ -17,7 +17,7 @@ import java.util.List;
 class DataCollector implements Shopper.IEarStartShopping, Shopper.IEarStopShopping,
         ShopList.IEarItemCollected, SensorEventListener {
 
-    public static final String STORE_ENTRANCE_NAME = "_ENTER";
+    public static final String STORE_ENTRANCE_NAME = "_enter";
 
     EventDataRecorded eventDataRecorded = new EventDataRecorded();
 

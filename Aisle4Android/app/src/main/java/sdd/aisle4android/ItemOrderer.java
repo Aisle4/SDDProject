@@ -177,8 +177,8 @@ class ItemGraph {
         // Construct nodes and edges
         for (ItemToItemData dat : data) {
             // Nodes
-            String name1 = dat.item1Name == null ? null : dat.item1Name.toLowerCase();
-            String name2 = dat.item2Name == null ? null : dat.item2Name.toLowerCase();
+            String name1 = dat.item1Name.toLowerCase();
+            String name2 = dat.item2Name.toLowerCase();
             Node item1 = nodes.get(name1);
             Node item2 = nodes.get(name2);
 
