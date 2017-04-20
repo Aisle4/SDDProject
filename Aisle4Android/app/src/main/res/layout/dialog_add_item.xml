@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     tools:context="sdd.aisle4android.HomeActivity">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/dialog_add_item_input"
+        android:dropDownHeight="130dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

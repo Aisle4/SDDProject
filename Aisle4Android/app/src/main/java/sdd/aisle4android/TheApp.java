@@ -68,5 +68,6 @@ public class TheApp extends Application {
     public Shopper getShopper() {
         return shopper;
     }
+    public FoodNameManager getFoodNameManager() { return foodNameManager; }
 }
 

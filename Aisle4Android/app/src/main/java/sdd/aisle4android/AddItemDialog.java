@@ -10,6 +10,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,18 +21,20 @@ import android.widget.EditText;
 
 
 public class AddItemDialog extends DialogFragment {
-    private EditText editText;
+    private AutoCompleteTextView editText;
     private Button posBtn;
 
     public interface Listener {
         void onAddItemDialogConfirm(String itemName);
     }
 
+    private static final String[] FOODS = new FoodNameManager().getFoodNames();
+
     @Override @NonNull public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_add_item, null);
 
-        editText = (EditText)view.findViewById(R.id.dialog_add_item_input);
+        editText = (AutoCompleteTextView)view.findViewById(R.id.dialog_add_item_input);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -45,6 +49,10 @@ public class AddItemDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setMessage(R.string.dialog_add_item_heading);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, FOODS);
+        editText.setAdapter(arrayAdapter);
+        editText.setThreshold(1);
 
         builder.setPositiveButton(R.string.btn_add_item_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
