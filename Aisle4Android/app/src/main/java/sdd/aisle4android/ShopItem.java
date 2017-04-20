@@ -58,9 +58,13 @@ class ShopItem {
     // PRIVATE MODIFIERS
 
     void setCollected(boolean collected) {
+        if (this.collected == collected) return;
+
         this.collected = collected;
         updateItemDB();
-        eventCollected.fire(this);
+        if (this.collected) {
+            eventCollected.fire(this);
+        }
     }
 
     class EventCollected extends Event<IEventListener> {
