@@ -102,7 +102,10 @@ public class FoodNameManager {
                 "Chocolate Chip Cookies,Cookies\n" +
                 "Double Chocolate Cookies,Cookies\n" +
                 "Sugar Cookies,Cookies\n" +
-                "yogurt,Dairy\n" +
+                "Yogurt,Dairy\n" +
+                "Milk, Dairy\n"+
+                "Eggs, Dairy\n"+
+                "Butter, Dairy\n"+
                 "cereal,Dry Foods\n" +
                 "pasta,Dry Foods\n" +
                 "Brown Eggs,Eggs\n" +
