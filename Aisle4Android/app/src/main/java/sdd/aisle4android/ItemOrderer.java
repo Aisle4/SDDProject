@@ -80,7 +80,7 @@ class ItemGraph {
     private static final float DISTANCE_PER_MILLISECOND = STEPS_PER_MILLISECOND * DISTANCE_PER_STEP;
 
     // Edge weight for item-category edges (paths that rely only on recorded data should be preferred)
-    private static final float DISTANCE_CATEGORY_NODE = 10 * DISTANCE_PER_STEP;
+    private static final float DISTANCE_CATEGORY_NODE = 1 * DISTANCE_PER_STEP;
 
 
     ItemGraph(List<ItemToItemData> data, FoodNameManager foodNameMgr) {

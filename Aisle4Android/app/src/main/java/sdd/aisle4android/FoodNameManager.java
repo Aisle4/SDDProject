@@ -25,7 +25,7 @@ public class FoodNameManager {
         for (int i = 0; i < nameCategoryArray.length; ++i ){
             //read in each line and put in map (format name,category)
             foodNameParse = nameCategoryArray[i].split(",");
-            nameCategoryMap.put(foodNameParse[0], foodNameParse[1]);
+            nameCategoryMap.put(foodNameParse[0].toLowerCase(), foodNameParse[1].toLowerCase());
         }
     }
 
