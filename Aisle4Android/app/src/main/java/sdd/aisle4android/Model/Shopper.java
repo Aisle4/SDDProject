@@ -61,6 +61,10 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
 
     // PUBLIC MODIFIERS
 
+    /**
+     * sets the list into shopping mode and activates data tracking
+     * @param list
+     */
     public void startShopping(ShopList list) {
         isShopping = true;
         activeShopList = list;
@@ -73,6 +77,9 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
         nearestItem = null;
         eventLocationUpdated.fire(this, nearestItem);
     }
+    /**
+     * deactivates shopping mode and disables data tracking
+     */
     public void endShopping() {
         isShopping = false;
         activeShopList.eventItemCollected.dettach(this);
@@ -102,6 +109,10 @@ class Shopper implements ShopList.IEarItemCollected, ShopList.IEarItemsChanged {
         shopLists.remove(index);
     }
 
+    /**
+     * collect (cross off) item and perform corresponding functions/data collection if in shopping mode
+     * @param item
+     */
     @Override
     public void onItemCollected(ShopItem item) {
         if (isShopping()) {
