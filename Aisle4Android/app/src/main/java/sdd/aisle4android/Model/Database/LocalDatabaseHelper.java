@@ -17,6 +17,11 @@ import sdd.aisle4android.Model.ShopList;
  * Created by cameron on 4/12/17.
  */
 
+/**
+ * Stores and reads information from the built in Android SQLite database to retain data
+ * when application is restarted.
+ */
+
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
 
@@ -48,6 +53,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
+    // Creates the database if it does not already exist
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LISTS_TABLE = "CREATE TABLE " + TABLE_LISTS + "("
@@ -71,6 +77,8 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+
+    // Add an empty list to the database when a list is created.
     public void addList(ShopList shopList){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -83,6 +91,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Adds an item to a list in the database
     public void addItem(String uniqueID, ShopItem shopItem){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -97,6 +106,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Removes an item from a list in the database
     public void deleteItem(ShopItem shopItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ITEMS, ITEM_ID_KEY + " = ?",
@@ -104,6 +114,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Updates the information for an item in the database when an item is modified
     public int updateItem(ShopItem shopItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -127,6 +138,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    // Removes a list and all the items on it from the database
     public void deleteList(ShopList shopList) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_LISTS, KEY_ID + " = ?",
@@ -136,6 +148,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Updates a list in the database when it is modified
     public int updateList(ShopList shopList) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -146,9 +159,9 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
         return db.update(TABLE_LISTS, values, KEY_ID + " = ?",
                 new String[] { shopList.getUniqueID() });
-
     }
 
+    // Returns a list of all list in the database
     public List<ShopList> getAllLists() {
         Log.d("dbhelper","Fetching all lists");
         List<ShopList> shopListList = new ArrayList<ShopList>();
@@ -166,6 +179,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         return shopListList;
     }
 
+    // Returns a shoplist of shopitems retreived from the database
     public ShopList getShopList(String listID) {
 
         SQLiteDatabase db = this.getWritableDatabase();

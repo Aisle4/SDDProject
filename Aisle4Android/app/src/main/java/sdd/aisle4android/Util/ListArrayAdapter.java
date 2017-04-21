@@ -17,6 +17,10 @@ import sdd.aisle4android.R;
  * Created by cameron on 3/26/17.
  **/
 
+/**
+ * Creates the view for a list to be displayed in the list of lists
+ */
+
 public class ListArrayAdapter extends ArrayAdapter<ShopList> {
 
     public ListArrayAdapter(Context context, List<ShopList> ShopListList) {

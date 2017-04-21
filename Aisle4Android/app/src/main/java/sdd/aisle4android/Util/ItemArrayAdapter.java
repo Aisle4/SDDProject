@@ -19,6 +19,10 @@ import sdd.aisle4android.R;
  * Created by cameron on 3/26/17.
  */
 
+/**
+ *  Creates the view to display for an item in the list of items
+ */
+
 public class ItemArrayAdapter extends ArrayAdapter<ShopItem> {
 
 

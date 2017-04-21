@@ -4,6 +4,8 @@ package sdd.aisle4android.Model;
  * Created by Robert Wild on 14/03/2017.
  */
 
+
+
 import android.content.Context;
 
 import java.util.UUID;
@@ -11,6 +13,10 @@ import java.util.UUID;
 import sdd.aisle4android.Model.Database.LocalDatabaseHelper;
 import sdd.aisle4android.Util.Event;
 
+
+/**
+ * Stores items on a shopping list
+ */
 public class ShopItem {
     EventCollected eventCollected = new EventCollected();
     EventStateChanged eventStateChanged = new EventStateChanged();
@@ -21,7 +27,7 @@ public class ShopItem {
     private String uniqueID;
     private Context context;
 
-
+    // initializes shopitem created in applicate
     ShopItem(String name, Context context) {
         this.name = name;
         this.addedDate = System.currentTimeMillis();
@@ -29,6 +35,7 @@ public class ShopItem {
         this.context = context;
     }
 
+    // initializes shopitem when being read from the SQLite database
     public ShopItem(String name, boolean collected, long addedDate, String uniqueID, Context context){
         this.name = name;
         this.collected = collected;

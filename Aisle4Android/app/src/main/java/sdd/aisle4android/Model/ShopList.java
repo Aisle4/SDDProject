@@ -17,7 +17,7 @@ import sdd.aisle4android.Util.Event;
  * Created by Robert Wild on 14/03/2017.
  */
 
-// TODO: implement method stubs
+// Stores information about a shopping list
 public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChanged {
     EventItemCollected eventItemCollected = new EventItemCollected();
     EventItemsChanged eventItemsChanged = new EventItemsChanged();
@@ -30,6 +30,7 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
     private String uniqueID;
     private Context context;
 
+    // initialize shopping list from application
     ShopList(String name, Context context) {
         this.name = name;
         this.created = System.currentTimeMillis();
@@ -39,6 +40,7 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
         this.uniqueID = UUID.randomUUID().toString();
     }
 
+    // initialize shopping list from local SQLite databases
     public ShopList(String id, String name, Long creation, Context context) {
         this.name = name;
         this.created = creation;
@@ -46,11 +48,6 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
         this.uniqueID = id;
         this.context = context;
         items = new ArrayList<>();
-    }
-
-
-    public ShopList(String[] data) {
-
     }
 
 
@@ -75,6 +72,8 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
         return items; // TODO: make unmodifiable? and each item?
     }
     public long getCreationDateMillis() { return creationDate; }
+
+    // Returns the day of the week a list was created
     public String getCreationDate() {
         //find each checkpoint (ie. today, yesterday) and compare
         Calendar temp = Calendar.getInstance();
@@ -186,17 +185,20 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
 
     // PRIVATE MODIFIERS
 
-    // local Database
+    // Adds item to shopping list and stores it in the local SQLite database
     void dbAddItem(ShopItem item) {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.addItem(uniqueID, item);
         db.close();
     }
+    // Removes item from shopping list and the local SQLite database
     void dbDeleteItem(ShopItem item) {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.deleteItem(item);
         db.close();
     }
+
+    // Updates list in local SQLite database when values change
     void dbUpdateList() {
         LocalDatabaseHelper db = new LocalDatabaseHelper(context);
         db.updateList(this);
@@ -218,7 +220,6 @@ public class ShopList implements ShopItem.IEventListener, ShopItem.IEarStateChan
 
 
     // EVENTS
-
     class EventItemCollected extends Event<IEarItemCollected> {
         void fire(ShopItem item) {
             for (IEarItemCollected listener : listeners) {
