@@ -29,18 +29,31 @@ public class FoodNameManager {
         }
     }
 
+    /**
+     * @return array of all item names
+     */
     public String[] getFoodNames() {
         return nameCategoryMap.keySet().toArray(new String[nameCategoryMap.size()]);
     }
+
+    /**
+     * @return array of all item categories
+     */
     public String[] getCategories() {
         return nameCategoryMap.values().toArray(new String[nameCategoryMap.size()]);
     }
+
+    /**
+     * pass an item name and get it's corresponding category
+     * @param itemName
+     * @return item category
+     */
     public String getCategory(String itemName) {
         return nameCategoryMap.get(itemName.toLowerCase());
     }
 
     private String getFoodCategoryData() {
-        // TODO: read this from a file
+        // TODO: read this from a csv file
         return "brownie mix,Baking Goods\n" +
                 "flour,Baking Goods\n" +
                 "sugar,Baking Goods\n" +

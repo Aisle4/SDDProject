@@ -26,6 +26,11 @@ public class RenameListDialog extends DialogFragment {
         void onRenameListDialogConfirm(String itemName, int index);
     }
 
+    /**
+     * Create the rename list dialogue and attach corresponding buttons with a user input fields
+     * @param savedInstanceState
+     * @return
+     */
     @Override @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -71,6 +76,11 @@ public class RenameListDialog extends DialogFragment {
         }
     }
 
+    /**
+     * enables the "rename" button in the rename list dialogue when the input field is not empty
+     * if it is empty the button is disabled (grayed out)
+     * @param title
+     */
     private void onListTitleUpdated(String title) {
         if (title.equals("")) {
             // Invalid Title

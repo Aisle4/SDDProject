@@ -31,6 +31,12 @@ public class NewListDialog extends DialogFragment {
         void onNewListDialogConfirm(String listName);
     }
 
+    /**
+     * create the dialogue prompt (fragment) for new list name input
+     * @param savedInstanceState
+     * @return
+     */
+
     @Override @NonNull public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_new_list, null);
@@ -46,6 +52,7 @@ public class NewListDialog extends DialogFragment {
                 onListTitleUpdated(s.toString());
             }
         });
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
@@ -73,6 +80,11 @@ public class NewListDialog extends DialogFragment {
             posBtn.setEnabled(false);
         }
     }
+    /**
+     * enables the "create" button in the new list dialogue when the input field is not empty
+     * if it is empty the button is disabled (grayed out)
+     * @param title
+     */
     private void onListTitleUpdated(String title) {
         if (title.equals("")) {
             // Invalid Title

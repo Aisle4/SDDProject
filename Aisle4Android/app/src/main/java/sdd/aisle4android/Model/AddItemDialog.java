@@ -22,6 +22,7 @@ import sdd.aisle4android.R;
 
 
 public class AddItemDialog extends DialogFragment {
+    //text box for user input which allows for autocomplete menus
     private AutoCompleteTextView editText;
     private Button posBtn;
 
@@ -29,8 +30,14 @@ public class AddItemDialog extends DialogFragment {
         void onAddItemDialogConfirm(String itemName);
     }
 
+    //pull array from FoodNameManager which contains item name suggestions for the dropdown menu (autocomplete)
     private static final String[] FOODS = new FoodNameManager().getFoodNames();
 
+    /**
+     * Create the add item dialogue and attach corresponding buttons with a user input fields
+     * @param savedInstanceState
+     * @return
+     */
     @Override @NonNull public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_add_item, null);
@@ -51,15 +58,18 @@ public class AddItemDialog extends DialogFragment {
         builder.setView(view);
         builder.setMessage(R.string.dialog_add_item_heading);
 
+        //must pass the FOODS array (suggestions) to get the auto complete drop down menu
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, FOODS);
         editText.setAdapter(arrayAdapter);
         editText.setThreshold(1);
 
+        //create add button
         builder.setPositiveButton(R.string.btn_add_item_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
             }
         });
+        //create done button
         builder.setNegativeButton(R.string.btn_add_item_negative, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
@@ -84,6 +94,12 @@ public class AddItemDialog extends DialogFragment {
             });
         }
     }
+
+    /**
+     * enables the "add" button in the add item dialogue when the input field is not empty
+     * if it is empty the button is disabled (grayed out)
+     * @param name
+     */
     private void onItemNameUpdated(String name) {
         if (name.equals("")) {
             // Invalid Name
