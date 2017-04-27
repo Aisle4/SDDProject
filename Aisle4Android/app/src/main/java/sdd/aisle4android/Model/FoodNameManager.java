@@ -233,7 +233,6 @@ public class FoodNameManager {
                 "Purple Peppers,Produce\n" +
                 "Radicchio,Produce\n" +
                 "Radishes,Produce\n" +
-                "Raisins,Produce\n" +
                 "Raspberries,Produce\n" +
                 "Red Apples,Produce\n" +
                 "Red Grapes,Produce\n" +
